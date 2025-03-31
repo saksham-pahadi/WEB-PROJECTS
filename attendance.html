@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Attendance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: black;
+        }
+        H2 {
+            color: white;
+        }
+        #attendanceList {
+            margin: auto;
+            margin-top: 20px;
+            text-align: left;
+            background-color: rgb(1, 111, 179);
+            padding: 20PX;
+            border-radius: 10PX;
+            max-width: 400px;
+        }
+        #attendanceList strong{
+            font-family: cursive;
+        }
+        #month{
+            background-color:  beige;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .btn{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(253, 202, 139);
+            flex-wrap: wrap;
+            padding: 20PX;
+            border-radius: 10PX;
+            max-width: 400px;
+            margin: auto;
+        }
+        input{
+            
+            margin: 5px;
+            padding: 10px;
+            width: 80%;
+        } 
+        button {
+            margin: 5px;
+            padding: 10px;
+            width: 40%;
+        }
+    </style>
+</head>
+<body>
+    <h2>4th SEM Attendance</h2>
+    <div class="btn">
+        <input type="text" id="nameInput" placeholder="Enter your name">
+        <button onclick="resetAttendance()">Reset </button>
+    <button onclick="markAttendance()">Mark </button>
+    </div>
+    <div id="attendanceList"></div>
+    
+    <script>
+        // Daily Attendance System
+        let attendanceData = JSON.parse(localStorage.getItem("attendance")) || {};
+
+        function markAttendance() {
+            const name = document.getElementById("nameInput").value.trim();
+            if (!name) {
+                alert("Please enter a name.");
+                return;
+            }
+            const date = new Date().toLocaleDateString();
+            if (!attendanceData[date]) {
+                attendanceData[date] = [];
+            }
+            if (!attendanceData[date].includes(name)) {
+                attendanceData[date].push(name);
+                localStorage.setItem("attendance", JSON.stringify(attendanceData));
+                // alert(`${name}'s attendance marked for ${date}`);
+            } else {
+                alert(`${name} is already marked present for today.`);
+            }
+            displayAttendance();
+        }
+
+        function displayAttendance() {
+            const displayArea = document.getElementById("attendanceList");
+            displayArea.innerHTML = "";
+            Object.keys(attendanceData).forEach(date => {
+                const entry = document.createElement("div");
+                entry.innerHTML = `<div id="month"><strong>${date} : </strong> ${attendanceData[date].join(", ")}</div>`;
+                displayArea.appendChild(entry);
+            });
+        }
+
+        function resetAttendance() {
+            if (confirm("Are you sure you want to reset all attendance records?")) {
+                localStorage.removeItem("attendance");
+                attendanceData = {};
+                displayAttendance();
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", displayAttendance);
+    </script>
+</body>
+</html>
