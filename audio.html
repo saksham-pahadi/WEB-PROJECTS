@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Audio Timeupdate Example</title>
+</head>
+<body>
+  <h2>🎧 Audio Player</h2>
+  
+
+  <p>⏱ Current Time: <span id="currentTime">0.00</span> sec</p> 
+
+  <script>
+    // const audio = new Audio("https://github.com/saksham-pahadi/Web-development-series/blob/main/Tut%2084%20Spotify%20clone%20using%20HTML%2C%20CSS%20%26%20javascript/songs/ALAG%20AASMAAN%20-%20Anuv%20Jain%20.mp3?raw=true"); 
+    let URL="https://github.com/saksham-pahadi/Web-development-series/blob/main/Tut%2084%20Spotify%20clone%20using%20HTML%2C%20CSS%20%26%20javascript/songs/ALAG%20AASMAAN%20-%20Anuv%20Jain%20.mp3";
+    const audio = new Audio(`${URL}?raw=true`);     
+    const timeDisplay = document.getElementById('currentTime');     
+    audio.play();       
+    console.log("Audio:"+audio);
+    audio.addEventListener('timeupdate', () => {
+      timeDisplay.textContent = Math.floor(audio.currentTime);
+      console.log(`Current Time: ${Math.floor(audio.currentTime)} sec`);
+    });
+  </script>
+</body>
+</html>
