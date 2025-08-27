@@ -32,8 +32,8 @@ function App() {
 
 
 
-  const saveToLS = () => {
-    localStorage.setItem("todos", JSON.stringify(todos))
+  const saveToLS = (todosArray) => {
+    localStorage.setItem("todos", JSON.stringify(todosArray))
 
   }
 
@@ -44,12 +44,11 @@ function App() {
 
 
   const handleEdit = (e, id) => {
-    console.log(id)
     let t = todos.filter(i => i.id === id);
+    setTodos(todos.filter(i => i.id !== id))
     setTodo(t[0].todo);
-    setSave("Save");
-    handleDelete(e, id);
-    saveToLS()
+    setSave("Save");   
+    
 
 
   }
@@ -58,9 +57,14 @@ function App() {
       return item.id !== id;
     });
 
+    if(newTodos.length===0){
+      localStorage.removeItem("todos")
+    }
+    else{
+      localStorage.setItem("todos", JSON.stringify(newTodos))
+    }
+
     setTodos(newTodos)
-    console.log("Todo deleted");
-    saveToLS()
 
   }
   const handleAdd = () => {
@@ -69,9 +73,8 @@ function App() {
     todo != "" ? setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }]) : alert("Todo can't be blank !");
     setTodo("")
     setSave("Add");
-    saveToLS()
+    localStorage.setItem("todos", JSON.stringify([...todos, { id: uuidv4(), todo, isCompleted: false }]))
 
-    console.log(todos)
 
 
   }
@@ -83,7 +86,6 @@ function App() {
   const handleCheckbox = (e) => {
 
     let id = e.target.name;
-    console.log(id)
     let index = todos.findIndex(item => {
 
       return item.id === id;
@@ -91,7 +93,7 @@ function App() {
     let newTodos = [...todos]
     todos[index].isCompleted = !todos[index].isCompleted;
     setTodos(newTodos)
-    saveToLS()
+    localStorage.setItem("todos", JSON.stringify(newTodos))
 
 
   }
@@ -106,7 +108,7 @@ function App() {
         <div className="addTodo w-1/1 ">
           <h2 className='text-lg font-bold mt-5'>Add a Todo</h2>
           <div className='flex justify-between items-center'>
-            <input onChange={handleChange} value={todo} type="text" className='w-4/5 p-1 px-2 h-10 bg-white text-black rounded-lg' placeholder='Create a new todo' />
+            <input onChange={(e)=>{setTodo(e.target.value)}} value={todo} type="text" className='w-4/5 p-1 px-2 h-10 bg-white text-black rounded-lg' placeholder='Create a new todo' />
             <button onClick={handleAdd} className='bg-violet-800 hover:bg-violet-950  h-10 text-white rounded-md ml-1  text-sm font-bold w-1/5'>{save}</button>
           </div>
         </div>
