@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import AudioDetector from "./components/AudioDetector";
 import React from "react";
+import Link from "next/link";
 
 export default function Homepage() {
   const canvasRef = useRef(null);
@@ -60,20 +61,24 @@ export default function Homepage() {
     }
 
     fetchWifi();
-    const interval = setInterval(fetchWifi, 5000);
+    const interval = setInterval(fetchWifi, 2000);
     return () => clearInterval(interval);
   }, [stop]);
 
   return (
     <main className="min-h-screen bg-gray-950 text-white p-8 relative">
       {console.log("detections", detections)}
-
+<Link href={"/about"}>About</Link>
       <h1 className="text-4xl font-bold text-center mb-8">
         🚨 Drone Detection Dashboard
       </h1>
+      
 
       {/* Audio section  */}
-      <section className="bg-gray-800 rounded-2xl p-6 shadow-lg md:col-span-2 mb-2 max-w-3xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl h-auto my-2 mx-auto">
+
+      
+      <section className="bg-gray-800 relative rounded-2xl p-6 shadow-lg md:col-span-2">
         <h2 className="text-xl font-semibold mb-4">Noise Detection</h2>
         <AudioDetector
           sampleRate={sampleRate}
@@ -88,10 +93,11 @@ export default function Homepage() {
           </p>
         )}
       </section>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl h-[50vh] mx-auto">
         {/* Wi-Fi Section */}
-        <section className="bg-gray-800 rounded-2xl p-6 shadow-lg md:col-span-2">
+        <section className="bg-gray-800 relative rounded-2xl p-6 shadow-lg md:col-span-2">
           <h2 className="text-xl font-semibold mb-4">📡 Wi-Fi Detections</h2>
           {loading ? (
             <p className="text-gray-400">
@@ -114,10 +120,8 @@ export default function Homepage() {
               
             </p>
           )}
-        </section>
-      </div>
-
-      {wifiDrones.length > 0 && (
+         <div className="absolute w-96/100 bottom-5 left-1/2 transform -translate-x-1/2">
+           {wifiDrones.length > 0 && (
         <button
           className="bg-red-600 p-4 w-full mt-2 rounded-xl text-xl font-bold"
           onClick={() => {
@@ -143,6 +147,11 @@ export default function Homepage() {
           Start
         </button>
       )}
+         </div>
+        </section>
+      </div>
+
+      
     </main>
   );
 }
