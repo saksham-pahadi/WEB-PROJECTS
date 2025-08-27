@@ -17,10 +17,10 @@ const About = () => {
     <h3 className='font-bold text-cyan-500 mt-4'>How to Use</h3>
     <ul className='list-disc m-1'>
       <li>Allow microphone access when prompted to enable audio detection.</li>
-      <li>Ensure your device's Wi-Fi is turned on for Wi-Fi signal scanning.</li>
-      <li>Click the "Start" button to Scan nera by drone.</li>
+      <li>Ensure your device Wi-Fi is turned on for Wi-Fi signal scanning.</li>
+      <li>Click the Start button to Scan nera by drone.</li>
       <li>Monitor the dashboard for real-time alerts on detected drones.</li>
-      <li>Click the "Stop Detection" button to halt all detection activities.</li>
+      <li>Click the Stop Detection button to halt all detection activities.</li>
     </ul>
 
     </div>
