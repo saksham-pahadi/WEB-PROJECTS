@@ -278,6 +278,10 @@ const Login = () => {
                     </div>
                     <button onClick={() => { handleLogin() }} type="button" className='w-full bg-blue-500 text-white p-2 rounded-lg mt-5 hover:bg-blue-600'>Sign in</button>
                     <p className='text-center text-gray-400 mt-4'>Need an account? <button className='text-blue-500 underline' onClick={() => { setSignUp(true), setsendOtp(false), setloading(false) }}>Create one</button></p>
+                    <div className=' flex items-center justify-center mt-5 border p-2 rounded-full cursor-pointer' onClick={()=>{signIn("google", { callbackUrl: "/" })}}>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png" className='h-10' alt="" />
+                        <p>Continue with Google</p>
+                    </div>
                 </form>}
 
 
@@ -395,6 +399,11 @@ const Login = () => {
 
                     <p className='text-center text-gray-400 mt-4'>Already have an account? <button className='text-blue-500 underline'
                         onClick={() => { setSignUp(false), setsendOtp(false) }}>Sign in</button></p>
+
+                    <div className=' flex items-center justify-center mt-5 border p-2 rounded-full cursor-pointer' onClick={()=>{signIn("google", { callbackUrl: "/" })}}>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png" className='h-10' alt="" />
+                        <p>Continue with Google</p>
+                    </div>
                 </form>}
             </div>
             <div className='left m-2 hidden  md:flex w-2/3 rounded-xl'>

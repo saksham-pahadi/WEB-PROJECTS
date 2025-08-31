@@ -34,18 +34,16 @@ export const authoptions = NextAuth({
     // session: { strategy: 'jwt' },
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
-            if (account.provider == "github") {
+            if (account.provider == "google") {
                 await dbConnect()
                 const currentUser = await User.findOne({ email: email })
                 console.log(!currentUser)
-                if (currentUser) {
+                if (!currentUser) {
                     const newUser = await User.create({
                         email: user.email,
-                        profilepic: user.image,
-                        username: user.email.split("@")[0],
-                        name: user.name,
-                        role: "user",
-                        password: "none"
+                        fullname: user.email.split("@")[0],
+                        remember: false,
+                        provider: "google"
                     })
 
                 }
@@ -63,10 +61,12 @@ export const authoptions = NextAuth({
                 return true
             }
         },
-        // async jwt({ token, user, account }) {
-        //   // token is JWT; can add custom fields
-        //   return token;
-        // },
+        async jwt({ token, user, account }) {
+            if (user) {
+                token.id = user.id;
+            }
+            return token;
+        },
         async session({ session, user, token }) {
             const dbUser = await User.findOne({ email: session.user.email })
             session.user.name = dbUser.fullname
