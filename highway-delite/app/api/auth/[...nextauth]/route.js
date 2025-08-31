@@ -6,34 +6,34 @@ import dbConnect from "@/lib/db";
 import User from "@/model/User";
 
 export const authoptions = NextAuth({
-  providers: [ CredentialsProvider({
-            name: "Credentials",
-            credentials: {
-                email: { label: "Email", type: "text" }
-            },
-            async authorize(credentials) {
-                // console.log(credentials)
-                await dbConnect();
-                const user = await User.findOne({email:credentials.email});
-                if (!user){ 
-                    // throw new Error("User not found");
-                    console.log("User not found")
-                }
-
-                
-                
-
-                return { name: user.fullname, email: user.email};
+    providers: [CredentialsProvider({
+        name: "Credentials",
+        credentials: {
+            email: { label: "Email", type: "text" }
+        },
+        async authorize(credentials) {
+            // console.log(credentials)
+            await dbConnect();
+            const user = await User.findOne({ email: credentials.email });
+            if (!user) {
+                console.log("User not found")
+                throw new Error("User not found");
             }
-        }),
+
+
+
+
+            return { name: user.fullname, email: user.email };
+        }
+    }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET
     })
-  ],
-  // session: { strategy: 'jwt' },
-  callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    ],
+    // session: { strategy: 'jwt' },
+    callbacks: {
+        async signIn({ user, account, profile, email, credentials }) {
             if (account.provider == "github") {
                 await dbConnect()
                 const currentUser = await User.findOne({ email: email })
@@ -41,11 +41,11 @@ export const authoptions = NextAuth({
                 if (currentUser) {
                     const newUser = await User.create({
                         email: user.email,
-                        profilepic:user.image,
+                        profilepic: user.image,
                         username: user.email.split("@")[0],
                         name: user.name,
                         role: "user",
-                        password:"none"
+                        password: "none"
                     })
 
                 }
@@ -63,18 +63,18 @@ export const authoptions = NextAuth({
                 return true
             }
         },
-    // async jwt({ token, user, account }) {
-    //   // token is JWT; can add custom fields
-    //   return token;
-    // },
-    async session({ session, user, token }) {
+        // async jwt({ token, user, account }) {
+        //   // token is JWT; can add custom fields
+        //   return token;
+        // },
+        async session({ session, user, token }) {
             const dbUser = await User.findOne({ email: session.user.email })
             session.user.name = dbUser.fullname
             console.log(dbUser)
             return session
         },
-      }
-  // secret: process.env.NEXTAUTH_SECRET
+    }
+    // secret: process.env.NEXTAUTH_SECRET
 });
 
 

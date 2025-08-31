@@ -18,16 +18,37 @@ const Login = () => {
     const [SignUp, setSignUp] = useState(false)
     const [loading, setloading] = useState(false)
 
+
+
+
     async function SendOtp() {
 
 
         if (SignUp) {
+             let user = await fetch(`http://localhost:3000/api/fetchuser/${form.email}`)
+            let res = await user.json()
+            console.log(res)
+            console.log(res.getuser.length)
+            if (res.getuser.length !== 0) {
+                toast.info("User already exist")
+                return;
+            }
             if (form.fullname === "") {
                 toast.error("Please enter Name")
                 return;
             }
             if (form.dob === "") {
                 toast.error("Please enter Date of Birth")
+                return;
+            }
+        }
+        if (!SignUp) {
+            let user = await fetch(`http://localhost:3000/api/fetchuser/${form.email}`)
+            let res = await user.json()
+            console.log(res)
+            console.log(res.getuser.length)
+            if (res.getuser.length == 0) {
+                toast.info("User not found, Create account first")
                 return;
             }
         }
@@ -86,7 +107,7 @@ const Login = () => {
 
     const handleLogin = async (e) => {
 
-        if(form.otp===""){
+        if (form.otp === "") {
             toast.error("Please enter OTP")
             return;
         }
@@ -96,7 +117,7 @@ const Login = () => {
         }
 
 
-        // e.preventDefault();
+
 
         await signIn("credentials", {
             email: form.email.toLowerCase(),
@@ -144,17 +165,38 @@ const Login = () => {
         };
 
         fetch("/api/signup", requestOptions)
-            .then((response) => response.text())
-            .then((result) => console.log(result))
-            .catch((error) => console.error(error));
+            .then((response) => {
+                response.text()
 
 
+            }
+
+
+
+
+
+            )
+            .then((result) => {
+                console.log(result)
+
+            }
+
+            )
+            .catch((error) => {
+                console.log(error)
+            });
+
+       
+        
 
         toast.success("Sign up successful")
         setForm({ email: '', otp: '', remember: false, dob: '', fullname: '' })
         setSignUp(false)
         setsendOtp(false)
         setloading(false)
+
+
+
 
 
     }
@@ -222,7 +264,7 @@ const Login = () => {
 
 
                     </label>
-                    <p className='mt-4 text-md text-blue-500 underline inline-block' onClick={() => {  SendOtp() }}>{sendOtp ? "Resend OTP" : "Send OTP"}</p>
+                    <p className='mt-4 text-md text-blue-500 underline inline-block' onClick={() => { SendOtp() }}>{sendOtp ? "Resend OTP" : "Send OTP"}</p>
 
 
                     <div className='flex justify-between items-center mt-4'>
@@ -234,7 +276,7 @@ const Login = () => {
                             <span className='text-gray-500 mx-2'>Keep me logged in</span>
                         </label>
                     </div>
-                    <button onClick={()=>{handleLogin()}} type="button" className='w-full bg-blue-500 text-white p-2 rounded-lg mt-5 hover:bg-blue-600'>Sign in</button>
+                    <button onClick={() => { handleLogin() }} type="button" className='w-full bg-blue-500 text-white p-2 rounded-lg mt-5 hover:bg-blue-600'>Sign in</button>
                     <p className='text-center text-gray-400 mt-4'>Need an account? <button className='text-blue-500 underline' onClick={() => { setSignUp(true), setsendOtp(false), setloading(false) }}>Create one</button></p>
                 </form>}
 

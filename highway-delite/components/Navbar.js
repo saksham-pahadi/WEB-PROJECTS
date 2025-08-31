@@ -24,12 +24,15 @@ const Navbar = () => {
                     <path d="M46.0766 25V7.54544H49.2385V14.9346H57.3266V7.54544H60.497V25H57.3266V17.5852H49.2385V25H46.0766ZM68.8907 25H62.976V7.54544H69.0101C70.743 7.54544 72.2316 7.89487 73.476 8.59374C74.726 9.28692 75.6862 10.2841 76.3566 11.5852C77.0271 12.8864 77.3623 14.4432 77.3623 16.2557C77.3623 18.0739 77.0243 19.6364 76.3481 20.9432C75.6777 22.25 74.7089 23.2528 73.4419 23.9517C72.1805 24.6506 70.6635 25 68.8907 25ZM66.1379 22.2642H68.7373C69.9532 22.2642 70.9674 22.0426 71.7799 21.5994C72.5924 21.1506 73.2032 20.4829 73.6123 19.5966C74.0214 18.7045 74.226 17.5909 74.226 16.2557C74.226 14.9204 74.0214 13.8125 73.6123 12.9318C73.2032 12.0454 72.5981 11.3835 71.797 10.946C71.0015 10.5028 70.0129 10.2812 68.8311 10.2812H66.1379V22.2642Z" fill="#232323" />
                 </svg>
             </Link>
-            {!session && <Link href={'/login'} className="buttons">
-                <button className='p-2 bg-white text-blue-500 font-semibold mx-2 rounded-lg border border-blue-500'>Sign in</button>
+             {!session && <Link href={'/login'} className="buttons">
+                <button className='p-2 bg-white text-blue-500 font-semibold mx-2 rounded-lg border border-blue-500 hover:bg-blue-500 hover:text-white'>Sign in</button>
             </Link>}
-            <div>
-             {["/dashboard"].includes(pathname)  &&<button onClick={()=>{redirect("/")}} className='p-2 bg-white text-blue-500 font-semibold mx-2 rounded-lg border border-blue-500 cursor-pointer'>Home</button>}
-            { session && <button onClick={()=>{signOut()}} className='p-2 bg-white text-blue-500 font-semibold mx-2 rounded-lg border border-blue-500 cursor-pointer'>Log out</button>}
+            
+            <div className={`${!session?"hidden":"flex"}`}>
+             {["/dashboard"].includes(pathname)  &&<button onClick={()=>{redirect("/")}} className='p-2 bg-white text-blue-500 font-semibold mx-2 rounded-lg border border-blue-500 hover:bg-blue-500 hover:text-white cursor-pointer'>Home</button>}
+             {["/"].includes(pathname)  &&<button onClick={()=>{redirect("/dashboard")}} className='p-2 bg-white text-blue-500 font-semibold mx-2 rounded-lg border border-blue-500 hover:bg-blue-500 hover:text-white cursor-pointer'>Notes</button>}
+            { session && <button onClick={()=>{signOut()}} className='p-2 bg-white text-blue-500 font-semibold mx-2 rounded-lg border border-blue-500 hover:bg-blue-500 hover:text-white cursor-pointer'>Log out</button>}
+           
             </div>
 
         </nav>
