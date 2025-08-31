@@ -4,10 +4,12 @@ import React from 'react'
 import Image from 'next/image'
 import { useState } from 'react'
 import { ToastContainer, toast, Bounce } from 'react-toastify';
-import { set } from 'mongoose'
+import mongoose, { set } from 'mongoose'
+import connectDB from '@/lib/db'
+import User from '@/model/User'
 
 const Login = () => {
-    const [form, setForm] = useState({ email: '', otp: '', remember: false, Dob: '', Name: '' });
+    const [form, setForm] = useState({ email: '', otp: '', remember: false, dob: '', fullname: '' });
     const [GivenOtp, setGivenOtp] = useState("")
     const [sendOtp, setsendOtp] = useState(false)
     const [show, setshow] = useState(false)
@@ -18,11 +20,11 @@ const Login = () => {
     async function SendOtp() {
 
 
-        if (form.Name === "") {
+        if (form.fullname === "") {
             toast.error("Please enter Name")
             return;
         }
-        if (form.Dob === "") {
+        if (form.dob === "") {
             toast.error("Please enter Date of Birth")
             return;
         }
@@ -42,7 +44,7 @@ const Login = () => {
 
 
 
-        
+
 
 
 
@@ -55,6 +57,10 @@ const Login = () => {
         const result = await res.json();
 
         console.log(result)
+
+
+
+
         setGivenOtp(result.otp)
         toast.success("OTP sent to your email")
         setsendOtp(true)
@@ -63,7 +69,6 @@ const Login = () => {
     }
 
     const handleChange = (e) => {
-        console.log(e.target)
         setForm({ ...form, [e.target.name]: e.target.value })
 
     }
@@ -71,16 +76,52 @@ const Login = () => {
         console.log("handle login")
 
     }
-    const handleSignUp = () => {
-        if(form.otp===""){
+    const handleSignUp = async () => {
+
+        if (form.otp === "") {
             toast.error("Please enter OTP")
             return;
         }
-        if(form.otp!==GivenOtp){
+        if (form.otp != GivenOtp) {
             toast.error("Please enter valid OTP")
             return;
         }
+        console.log(form.dob)
+        console.log(form.fullname)
+        console.log(typeof (form.dob))
+
+
+
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "email": form.email,
+            "remember": remember,
+            "dob": form.dob,
+            "fullname": form.fullname
+        });
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+        };
+
+        fetch("/api/signup", requestOptions)
+            .then((response) => response.text())
+            .then((result) => console.log(result))
+            .catch((error) => console.error(error));
+
+
+
         toast.success("Sign up successful")
+        setForm({ email: '', otp: '', remember: false, dob: '', fullname: '' })
+        setSignUp(false)
+        setsendOtp(false)
+        setloading(false)
+
 
     }
 
@@ -160,7 +201,7 @@ const Login = () => {
                         </label>
                     </div>
                     <button type="submit" className='w-full bg-blue-500 text-white p-2 rounded-lg mt-5 hover:bg-blue-600'>Sign in</button>
-                    <p className='text-center text-gray-400 mt-4'>Need an account? <button className='text-blue-500 underline' onClick={() => { setSignUp(true), setsendOtp(false) }}>Create one</button></p>
+                    <p className='text-center text-gray-400 mt-4'>Need an account? <button className='text-blue-500 underline' onClick={() => { setSignUp(true), setsendOtp(false),setloading(false) }}>Create one</button></p>
                 </form>}
 
 
@@ -171,13 +212,13 @@ const Login = () => {
                     <p className='text-center text-gray-400 mb-4'>Sign up to enjoy the feature of HD</p>
 
 
-                    <label htmlFor="Name" className="relative">
+                    <label htmlFor="fullname" className="relative">
                         <input
-                            name='Name'
-                            value={form.Name}
+                            name='fullname'
+                            value={form.fullname}
                             onChange={handleChange}
                             type="text"
-                            id="Name"
+                            id="fullname"
                             placeholder=""
                             className="peer p-2 text-lg  mt-4 w-full rounded-lg border-2 border-blue-500   dark:border-gray-500 dark:bg-white dark:text-gray-900 focus:border-blue-500 focus:outline-none "
                         />
@@ -192,13 +233,13 @@ const Login = () => {
 
 
 
-                    <label htmlFor="Dob" className="relative">
+                    <label htmlFor="dob" className="relative">
                         <input
-                            name='Dob'
-                            value={form.Dob}
+                            name='dob'
+                            value={form.dob}
                             onChange={handleChange}
                             type="date"
-                            id="Dob"
+                            id="dob"
                             placeholder=""
                             className="peer p-2 text-lg  mt-4 w-full rounded-lg border-2 border-blue-500   dark:border-gray-500 dark:bg-white dark:text-gray-900 focus:border-blue-500 focus:outline-none "
                         />
@@ -261,7 +302,7 @@ const Login = () => {
 
 
 
-                    {!sendOtp ? <button type='button' disabled={loading} className={`w-full ${loading ? 'cursor-wait bg-gray-500' : "cursor-pointer bg-blue-500 hover:bg-blue-600 "}  text-white p-2 rounded-lg mt-5 text-center`} onClick={() => { SendOtp() }}>Get OTP</button>
+                    {!sendOtp ? <button type='button' disabled={loading} className={`w-full ${loading ? 'cursor-wait bg-gray-500' : 'cursor-pointer bg-blue-500 hover:bg-blue-600 '}  text-white p-2 rounded-lg mt-5 text-center`} onClick={() => { SendOtp() }}>Get OTP</button>
 
                         : <button type="button" className='w-full bg-blue-500 text-white p-2 rounded-lg mt-5 hover:bg-blue-600 text-center' onClick={() => { handleSignUp(), setloading(true) }}>Sign up</button>}
 

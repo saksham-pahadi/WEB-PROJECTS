@@ -5,4 +5,4 @@ const OTPSchema = new mongoose.Schema({
   expiresAt: Date,
 });
 OTPSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); // TTL
-export default mongoose.models.OTP || mongoose.model('OTP', OTPSchema);
+export default mongoose.models?.OTP || mongoose.model('OTP', OTPSchema);
