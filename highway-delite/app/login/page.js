@@ -4,6 +4,7 @@ import React from 'react'
 import Image from 'next/image'
 import { useState } from 'react'
 import { ToastContainer, toast, Bounce } from 'react-toastify';
+import { useSession, signIn, signOut } from "next-auth/react"
 import mongoose, { set } from 'mongoose'
 import connectDB from '@/lib/db'
 import User from '@/model/User'
@@ -20,13 +21,15 @@ const Login = () => {
     async function SendOtp() {
 
 
-        if (form.fullname === "") {
-            toast.error("Please enter Name")
-            return;
-        }
-        if (form.dob === "") {
-            toast.error("Please enter Date of Birth")
-            return;
+        if (SignUp) {
+            if (form.fullname === "") {
+                toast.error("Please enter Name")
+                return;
+            }
+            if (form.dob === "") {
+                toast.error("Please enter Date of Birth")
+                return;
+            }
         }
         if (form.email === "") {
             toast.error("Please enter email")
@@ -41,6 +44,7 @@ const Login = () => {
         console.log("Sending OTP to ", form.email)
 
         setloading(true)
+        setsendOtp(true)
 
 
 
@@ -48,34 +52,64 @@ const Login = () => {
 
 
 
-        const res = await fetch('/api/auth/requestOtp', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: form.email })
-        });
+        // const res = await fetch('/api/auth/requestOtp', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({ email: form.email })
+        // });
 
-        const result = await res.json();
+        // const result = await res.json();
 
-        console.log(result)
+        // console.log(result)
+        // setGivenOtp(result.otp)
+
+
+        setTimeout(() => {
+            setGivenOtp("123123")
+        }, 3000);
 
 
 
 
-        setGivenOtp(result.otp)
         toast.success("OTP sent to your email")
         setsendOtp(true)
         setloading(false)
-        return result;
+        // return result;
     }
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value })
 
     }
-    const handlelogin = () => {
-        console.log("handle login")
 
-    }
+
+
+    const handleLogin = async (e) => {
+
+        if(form.otp===""){
+            toast.error("Please enter OTP")
+            return;
+        }
+        if (form.otp != GivenOtp) {
+            toast.error("Please enter valid OTP")
+            return;
+        }
+
+
+        // e.preventDefault();
+
+        await signIn("credentials", {
+            email: form.email.toLowerCase(),
+            callbackUrl: "/dashboard"
+        });
+    };
+
+
+
+
+
+
+
     const handleSignUp = async () => {
 
         if (form.otp === "") {
@@ -96,7 +130,7 @@ const Login = () => {
         myHeaders.append("Content-Type", "application/json");
 
         const raw = JSON.stringify({
-            "email": form.email,
+            "email": form.email.toLowerCase(),
             "remember": remember,
             "dob": form.dob,
             "fullname": form.fullname
@@ -188,7 +222,7 @@ const Login = () => {
 
 
                     </label>
-                    <p className='mt-4 text-md text-blue-500 underline inline-block' onClick={() => { setsendOtp(true) }}>{sendOtp ? "Resend OTP" : "Send OTP"}</p>
+                    <p className='mt-4 text-md text-blue-500 underline inline-block' onClick={() => {  SendOtp() }}>{sendOtp ? "Resend OTP" : "Send OTP"}</p>
 
 
                     <div className='flex justify-between items-center mt-4'>
@@ -200,8 +234,8 @@ const Login = () => {
                             <span className='text-gray-500 mx-2'>Keep me logged in</span>
                         </label>
                     </div>
-                    <button type="submit" className='w-full bg-blue-500 text-white p-2 rounded-lg mt-5 hover:bg-blue-600'>Sign in</button>
-                    <p className='text-center text-gray-400 mt-4'>Need an account? <button className='text-blue-500 underline' onClick={() => { setSignUp(true), setsendOtp(false),setloading(false) }}>Create one</button></p>
+                    <button onClick={()=>{handleLogin()}} type="button" className='w-full bg-blue-500 text-white p-2 rounded-lg mt-5 hover:bg-blue-600'>Sign in</button>
+                    <p className='text-center text-gray-400 mt-4'>Need an account? <button className='text-blue-500 underline' onClick={() => { setSignUp(true), setsendOtp(false), setloading(false) }}>Create one</button></p>
                 </form>}
 
 

@@ -2,9 +2,6 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import User from "@/model/User";
-import Otp from "@/model/Otp";
-import bcrypt from "bcryptjs";
-import sendMail from "@/lib/mailer";
 
 export async function POST(req) {
     try {

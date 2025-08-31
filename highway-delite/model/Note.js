@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 const NoteSchema = new mongoose.Schema({
-  userId: mongoose.Types.ObjectId,
+  email: String,
   title: String,
   content: String,
   createdAt: { type: Date, default: Date.now }
