@@ -27,8 +27,7 @@ const Login = () => {
         if (SignUp) {
              let user = await fetch(`http://localhost:3000/api/fetchuser/${form.email}`)
             let res = await user.json()
-            console.log(res)
-            console.log(res.getuser.length)
+            
             if (res.getuser.length !== 0) {
                 toast.info("User already exist")
                 return;
@@ -45,8 +44,7 @@ const Login = () => {
         if (!SignUp) {
             let user = await fetch(`http://localhost:3000/api/fetchuser/${form.email}`)
             let res = await user.json()
-            console.log(res)
-            console.log(res.getuser.length)
+            
             if (res.getuser.length == 0) {
                 toast.info("User not found, Create account first")
                 return;
@@ -62,7 +60,8 @@ const Login = () => {
             toast.error("Please enter a valid email")
             return;
         }
-        console.log("Sending OTP to ", form.email)
+
+        // console.log("Sending OTP to ", form.email)
 
         setloading(true)
         setsendOtp(true)
@@ -73,21 +72,18 @@ const Login = () => {
 
 
 
-        // const res = await fetch('/api/auth/requestOtp', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ email: form.email })
-        // });
+        const res = await fetch('/api/auth/requestOtp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: form.email })
+        });
 
-        // const result = await res.json();
+        const result = await res.json();
 
-        // console.log(result)
-        // setGivenOtp(result.otp)
+        setGivenOtp(result.otp)
 
 
-        setTimeout(() => {
-            setGivenOtp("123123")
-        }, 3000);
+        
 
 
 
@@ -141,9 +137,6 @@ const Login = () => {
             toast.error("Please enter valid OTP")
             return;
         }
-        console.log(form.dob)
-        console.log(form.fullname)
-        console.log(typeof (form.dob))
 
 
 
@@ -177,7 +170,7 @@ const Login = () => {
 
             )
             .then((result) => {
-                console.log(result)
+                // console.log(result)
 
             }
 

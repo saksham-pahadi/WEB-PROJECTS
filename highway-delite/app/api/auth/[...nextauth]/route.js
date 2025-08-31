@@ -36,9 +36,8 @@ export const authoptions = NextAuth({
         async signIn({ user, account, profile, email, credentials }) {
             if (account.provider == "google") {
                 await dbConnect()
-                const currentUser = await User.findOne({ email: email })
-                console.log(!currentUser)
-                if (!currentUser) {
+                const currentUser = await User.find({ email: user.email })
+                if (currentUser.length==0) {
                     const newUser = await User.create({
                         email: user.email,
                         fullname: user.email.split("@")[0],

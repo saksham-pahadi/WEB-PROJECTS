@@ -28,7 +28,6 @@ const Dashboard = () => {
         await fetch(`http://localhost:3000/api/getnotes/${session.user.email}`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
-                console.log("result-->>", result.Notes)
                 setNotes(result.Notes)
 
             })
@@ -98,7 +97,6 @@ const Dashboard = () => {
 
 
     const deleteNote = (noteId) => {
-        console.log(noteId)
         
 
 
