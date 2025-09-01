@@ -9,7 +9,7 @@ export default function Home() {
     <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
       <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">Highway Delite
       </h1>
-      <p className="mb-8 leading-relaxed">India's largest digitally connected mobility and highway wayside amenities platform with over 1.5 million + customers, 3 Lakh + connected pit stops, and 1 lakh + KMs of verified highway routes
+      <p className="mb-8 leading-relaxed">India&apos;s largest digitally connected mobility and highway wayside amenities platform with over 1.5 million + customers, 3 Lakh + connected pit stops, and 1 lakh + KMs of verified highway routes
 
 We are offering connected mobility services in the areas of highway pitstops, EV Chargers, FASTag, GPS, Insurance, RSA (Roadside Assistance), Accident Emergency Assistance, and Washroom Scores.
 

@@ -44,9 +44,11 @@ const Dashboard = () => {
     }
 
     useEffect(() => {
-        getNotes()
-
-    }, [])
+        async function fetchNotes() {
+            await getNotes();
+        }
+        fetchNotes();
+    }, []);
 
 
 
@@ -97,7 +99,7 @@ const Dashboard = () => {
 
 
     const deleteNote = (noteId) => {
-        
+
 
 
 
@@ -175,14 +177,14 @@ const Dashboard = () => {
 
 
 
-{confirm && <div className='absolute top-[30%] left-[30%] flex flex-col justify-center gap-10 lg:h-[40vh] lg:w-[40vw] bg-white p-4 border border-blue-500 rounded-lg shadow-[-1px_3px_6px_5px_rgba(0,_0,_0,_0.1)]'>
-    <p className='text-2xl lg:text-4xl text-center font-bold'>Are you sure?</p>
-    <div className='flex justify-around mt-4'>
-        <button className='p-2 bg-white text-green-500 font-semibold mx-2 rounded-lg border border-green-500 hover:bg-green-500 hover:text-white' onClick={()=>{setconfirm("")}} type="button">Cancle</button>
-        <button className='p-2 bg-white text-red-500 font-semibold mx-2 rounded-lg border border-red-500 hover:bg-red-500 hover:text-white' onClick={()=>{deleteNote(confirm),setconfirm(false)}} type="button">Delete</button>
-    </div>
-</div>}
-                    
+                    {confirm && <div className='absolute top-[30%] left-[30%] flex flex-col justify-center gap-10 lg:h-[40vh] lg:w-[40vw] bg-white p-4 border border-blue-500 rounded-lg shadow-[-1px_3px_6px_5px_rgba(0,_0,_0,_0.1)]'>
+                        <p className='text-2xl lg:text-4xl text-center font-bold'>Are you sure?</p>
+                        <div className='flex justify-around mt-4'>
+                            <button className='p-2 bg-white text-green-500 font-semibold mx-2 rounded-lg border border-green-500 hover:bg-green-500 hover:text-white' onClick={() => { setconfirm("") }} type="button">Cancle</button>
+                            <button className='p-2 bg-white text-red-500 font-semibold mx-2 rounded-lg border border-red-500 hover:bg-red-500 hover:text-white' onClick={() => { deleteNote(confirm), setconfirm(false) }} type="button">Delete</button>
+                        </div>
+                    </div>}
+
                     {Notes.map((item, index) => {
                         return <div key={index} className='p-4 border rounded-lg shadow-[-1px_3px_6px_5px_rgba(0,_0,_0,_0.1)] '>
                             <div className='flex justify-between items-start gap-2'>
@@ -190,7 +192,7 @@ const Dashboard = () => {
 
                                 <h3 className='text-xl font-semibold'>{item.title}</h3>
 
-                                <img src="delete.svg" alt="" onClick={() => {setconfirm(item._id)}} />
+                                <img src="delete.svg" alt="" onClick={() => { setconfirm(item._id) }} />
                             </div>
                             <p className='mt-2'>{item.content}</p>
                         </div>
