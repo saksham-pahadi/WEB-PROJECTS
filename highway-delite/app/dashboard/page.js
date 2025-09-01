@@ -25,7 +25,7 @@ const Dashboard = () => {
             method: "GET",
         };
 
-        await fetch(`http://localhost:3000/api/getnotes/${session.user.email}`, requestOptions)
+        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/getnotes/${session.user.email}`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
                 setNotes(result.Notes)
@@ -85,7 +85,7 @@ const Dashboard = () => {
             redirect: "follow"
         };
 
-        fetch("http://localhost:3000/api/savenotes", requestOptions)
+        fetch(`${process.env.NEXT_PUBLIC_URL}/api/savenotes`, requestOptions)
             .then((response) => response.text())
             .then((result) => console.log(result))
             .catch((error) => console.error(error));
@@ -115,7 +115,7 @@ const Dashboard = () => {
             redirect: "follow"
         };
 
-        fetch(`http://localhost:3000/api/deletenote/${noteId}`, requestOptions)
+        fetch(`${process.env.NEXT_PUBLIC_URL}/api/deletenote/${noteId}`, requestOptions)
             .then((response) => response.text())
             .then((result) => console.log(result))
             .catch((error) => console.error(error));

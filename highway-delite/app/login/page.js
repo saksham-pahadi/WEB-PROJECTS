@@ -25,7 +25,7 @@ const Login = () => {
 
 
         if (SignUp) {
-             let user = await fetch(`http://localhost:3000/api/fetchuser/${form.email}`)
+             let user = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/fetchuser/${form.email}`)
             let res = await user.json()
             
             if (res.getuser.length !== 0) {
@@ -42,7 +42,7 @@ const Login = () => {
             }
         }
         if (!SignUp) {
-            let user = await fetch(`http://localhost:3000/api/fetchuser/${form.email}`)
+            let user = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/fetchuser/${form.email}`)
             let res = await user.json()
             
             if (res.getuser.length == 0) {
