@@ -36,11 +36,24 @@ cd WEB-PROJECTS/highway-delite
 npm install
 ```
  (or use yarn install / pnpm install if you prefer)
-### Step-3 : 🛠️ Build - To build the project for production:
+### Step-3 : Set Environment Variables
+```bash
+MONGODB_URI="your mongoDB connection string"
+JWT_SECRET="your random secret string"
+NEXT_PUBLIC_URL="your domain or localhost"
+NEXTAUTH_SECRET="random secret string"
+GOOGLE_CLIENT_ID="Your Google client ID"
+GOOGLE_CLIENT_SECRET="Your Google client SECRET"
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER="Your gmail ID"
+SMTP_PASS="Your App password"
+```
+### Step-4 : 🛠️ Build - To build the project for production:
 ```bash
 npm run build
 ```
-### Step-4 : ▶️ Run - 
+### Step-5 : ▶️ Run - 
 - Start the development server
 ```bash
 npm start
