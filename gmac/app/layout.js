@@ -1,6 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/component/Navbar";
+import Footer from "@/component/Footer";
+import SessionWrapper from "@/component/SessionWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,9 +24,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      > <SessionWrapper>
         <Navbar/>
         {children}
+        <Footer/>
+        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+        </SessionWrapper>
       </body>
     </html>
   );

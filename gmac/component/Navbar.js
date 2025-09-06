@@ -25,7 +25,7 @@ const Navbar = () => {
                     <li onClick={()=>{setnavOptions({Home:false, About:true, Connect:false})}} className={`hover:text-purple-500 ${navOptions.About ? "font-semibold text-purple-500":""}`}><Link href={"/"}>About</Link></li>
                     <li onClick={()=>{setnavOptions({Home:false, About:false, Connect:true})}} className={`hover:text-purple-500 ${navOptions.Connect ? "font-semibold text-purple-500":""}`}><Link href={"/"}>Connect</Link></li>
                 </ul>
-                <button type="button" className="text-white bg-gradient-to-b from-purple-400  to-purple-600  shadow-lg  hover:dark:shadow-lg hover:dark:shadow-purple-600/60 font-semibold rounded-full text-sm px-5 py-2.5 text-center transition-all duration-100 ">Sign in</button>
+                <Link onClick={()=>{setnavOptions({Home:false, About:false, Connect:false})}} href={"/login"} type="button" className="text-white bg-gradient-to-b from-purple-400  to-purple-600  shadow-lg  hover:dark:shadow-lg hover:dark:shadow-purple-600/60 font-semibold rounded-full text-sm px-5 py-2.5 text-center transition-all duration-100 ">Sign in</Link>
 
             </div>
 

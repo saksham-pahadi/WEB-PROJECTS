@@ -10,7 +10,7 @@ export default function SquareRobot({ modelPath }) {
   return (
     <Canvas camera={{ position: [0, 5, 20], fov: 35 }}>
       <ambientLight intensity={1} />
-      <directionalLight position={[10, 10, 10]} castShadow />
+      <directionalLight position={[0, 0, 1]} castShadow />
 
       {/* 🔥 Automatically centers and scales */}
       <Center>
@@ -19,6 +19,8 @@ export default function SquareRobot({ modelPath }) {
 
       <OrbitControls
         enableRotate
+        autoRotate
+        autoRotateSpeed={10}
         enableZoom={false}
         enablePan={false}
         minPolarAngle={Math.PI / 2.2}
