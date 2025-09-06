@@ -1,103 +1,548 @@
+"use client";
 import Image from "next/image";
+import Rating from '@mui/material/Rating';
+import Stack from '@mui/material/Stack';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [index, setIndex] = useState(0);
+  const images = [
+  "image1.jpg",
+  "image2.jpg",
+  "image3.jpg",
+  "image4.jpg",
+  "image5.jpg",
+  "image6.jpg"
+  
+];
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+
+
+  const prevSlide = () => {
+    setIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const nextSlide = () => {
+    setIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    }, 5000); // 4 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+
+  return (
+    <main>
+
+
+      
+
+      <div className="relative w-full overflow-hidden  shadow-lg">
+      {/* Images */}
+      <div className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] w-full">
+        <AnimatePresence>
+          <motion.img
+            key={images[index]}
+            src={images[index]}
+            alt="carousel"
+            className="absolute w-full h-full object-cover"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.6 }}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+        </AnimatePresence>
+      </div>
+
+      {/* Controls */}
+      <button
+        onClick={prevSlide}
+        className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 p-3 rounded-full hover:bg-black/70"
+      >
+        <ChevronLeft className="text-white" />
+      </button>
+      <button
+        onClick={nextSlide}
+        className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 p-3 rounded-full hover:bg-black/70"
+      >
+        <ChevronRight className="text-white" />
+      </button>
+
+      {/* Dots */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+        {images.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIndex(i)}
+            className={`w-3 h-3 rounded-full ${
+              i === index ? "bg-white" : "bg-white/50"
+            }`}
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        ))}
+      </div>
     </div>
+
+
+      <div className="flex items-center md:justify-center m-10 gap-5 overflow-x-scroll no-scrollbar">
+
+        <div className="flex flex-col items-center">
+          <div className="w-20 h-20 sm:w-30 sm:h-30 rounded-full bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] duration-200">
+          </div>
+          <p>Men</p>
+        </div>
+
+        <div className="flex flex-col items-center">
+          <div className="w-20 h-20 sm:w-30 sm:h-30 rounded-full bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] duration-200">
+          </div>
+          <p>Men</p>
+        </div>
+        <div className="flex flex-col items-center">
+          <div className="w-20 h-20 sm:w-30 sm:h-30 rounded-full bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] duration-200">
+          </div>
+          <p>Men</p>
+        </div>
+
+        <div className="flex flex-col items-center">
+          <div className="w-20 h-20 sm:w-30 sm:h-30 rounded-full bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] duration-200">
+          </div>
+          <p>Men</p>
+        </div>
+        <div className="flex flex-col items-center">
+          <div className="w-20 h-20 sm:w-30 sm:h-30 rounded-full bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] duration-200">
+          </div>
+          <p>Men</p>
+        </div>
+
+        <div className="flex flex-col items-center">
+          <div className="w-20 h-20 sm:w-30 sm:h-30 rounded-full bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] duration-200">
+          </div>
+          <p>Men</p>
+        </div>
+        <div className="flex flex-col items-center">
+          <div className="w-20 h-20 sm:w-30 sm:h-30 rounded-full bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] duration-200">
+          </div>
+          <p>Men</p>
+        </div>
+
+        <div className="flex flex-col items-center">
+          <div className="w-20 h-20 sm:w-30 sm:h-30 rounded-full bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] duration-200">
+          </div>
+          <p>Men</p>
+        </div>
+
+      </div>
+
+
+      <h3 className="font-semibold mx-10 text-xl">Deals of the day</h3>
+      <div className="h-[1px] w-9/10 mx-10 mt-4 bg-gray-300"></div>
+
+
+
+      <div className="today-deals mx-10 flex gap-3 py-3 mt-5 overflow-x-scroll no-scrollbar">
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+      </div>
+     
+
+
+
+      <div className="m-10  flex sm:flex-row gap-2 overflow-x-scroll no-scrollbar">
+        <img className="w-1/2 rounded-xl sm:w-1/3" src="image9.jpg" alt="" />
+        <img className="w-1/2 rounded-xl sm:w-1/3" src="image7.jpg" alt="" />
+        <img className="w-1/2 rounded-xl sm:w-1/3" src="image10.jpg" alt="" />
+        <img className="w-1/2 rounded-xl sm:w-1/3" src="image8.jpg" alt="" />
+        
+      </div>
+
+
+      <h3 className="font-semibold mx-10 text-xl">Deals of the day</h3>
+      <div className="h-[1px] w-9/10 mx-10 mt-4 bg-gray-300"></div>
+
+
+
+
+      <div className="today-deals mx-10 flex gap-3 py-3 mt-5 overflow-x-scroll no-scrollbar">
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+        <div className="product bg-gray-200 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
+          <div className="product-image h-50 w-50 rounded-xl bg-[url('https://static.vecteezy.com/system/resources/thumbnails/033/129/417/small_2x/a-business-man-stands-against-white-background-with-his-arms-crossed-ai-generative-photo.jpg')] bg-cover bg-center">
+
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Clothes</p>
+          <h5 className="font-bold">Formal Blazzer</h5>
+          <Stack  spacing={1}>
+            <Rating size="small" name="half-rating-read" value={4.5} precision={0.5} readOnly />
+          </Stack>
+          <p className="font-bold">5499/-</p>
+
+          <div className="mt-2 mx-1 flex items-center justify-between">
+
+          <button className="w-1/2 text-sm bg-emerald-200 border border-emerald-200 hover:border-emerald-500 p-2 rounded-xl " type="button" >Add to cart</button>
+          <button title="Wishlist" type="buttom"><img className='hover:bg-emerald-200 p-2 rounded-full' src="wishlist.svg" alt="" /></button>
+          </div>
+        </div>
+      </div>
+     
+
+
+    </main>
   );
 }
