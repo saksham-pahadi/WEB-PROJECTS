@@ -1,11 +1,13 @@
 import React from 'react'
+import Link from 'next/link'
+
 
 const Navbar = () => {
   return (<>
   <nav className='h-20 flex items-center justify-between mx-5'>
-    <div className="logo cursor-pointer">
+    <Link href={"/"} className="logo cursor-pointer">
         <h1 className='text-2xl font-bold text-emerald-600'>Grammy Store</h1>
-    </div>
+    </Link>
 
 
     <div className="search hidden w-1/4 sm:flex justify-between border p-2 rounded-lg">
@@ -18,13 +20,13 @@ const Navbar = () => {
     
     <div className='profile hidden sm:flex gap-3'>
        <div className='hover:bg-emerald-400 p-1 rounded-full cursor-pointer'>
-        <img title='Profile' className='h-6' src="profile.svg" alt="" />
+        <img title='Profile' className='h-6' src="profile.svg" alt="Profile" />
        </div>
        <div className='hover:bg-emerald-400 p-1 rounded-full cursor-pointer'>
-        <img title='wishlist' className='h-6' src="wishlist.svg" alt="" />
+        <img title='wishlist' className='h-6' src="wishlist.svg" alt="Wishlist" />
        </div>
        <div className='hover:bg-emerald-400 p-1 rounded-full cursor-pointer'>
-        <img title='Cart' className='h-6' src="cart.svg" alt="" />
+        <img title='Cart' className='h-6' src="cart.svg" alt="Cart" />
        </div>
 
     </div>
