@@ -58,11 +58,43 @@ const Navbar = () => {
         Shopping By Category
       </div>
       <select className='p-0' name="" id="">
-        <option className='bg-emerald-200 border-0 ' value="">Clothes</option>
-        <option value="">Shoes</option>
-        <option value="">Perfume</option>
-        <option value="">Jwellary</option>
-        <option value="">Assets</option>
+        <option className='bg-emerald-500 border-0 ' value="">Fashion</option>
+        <option value="">Top</option>
+        <option value="">Men's shirt</option>
+        <option value="">Men's shoes</option>
+        <option value="">Women's dresses</option>
+        <option value="">Women's shoes</option>
+      </select>
+      <select className='p-0' name="" id="">
+        <option className='bg-emerald-500 border-0 ' value="">Accessories</option>
+        <option value="">Watches</option>
+        <option value="">Sunglasses</option>
+        <option value="">Kitchen Accessories</option>
+        <option value="">Sports Accessories</option>
+        <option value="">Mobile Accessories</option>
+      </select>
+      <select className='p-0' name="" id="">
+        <option className='bg-emerald-500 border-0 ' value="">Electronics</option>
+        <option value="">Laptops</option>
+        <option value="">Smartphone</option>
+        <option value="">Motorcycle</option>
+        <option value="">Vehicle</option>
+      </select>
+      <select className='p-0' name="" id="">
+        <option className='bg-emerald-500 border-0 ' value="">Life Style</option>
+        <option value="">Beauty</option>
+        <option value="">Fragrances</option>
+        <option value="">Mens Watches</option>
+        <option value="">Sunglasses</option>
+        <option value="">Women Bags</option>
+        <option value="">Women Jewellery</option>
+        <option value="">Women Watches</option>
+      </select>
+      <select className='p-0' name="" id="">
+        <option className='bg-emerald-500 border-0 ' value="">Home Assets</option>
+        <option value="">Furniture</option>
+        <option value="">Groceries</option>
+        <option value="">Home Decoration</option>
       </select>
     </aside>
 
