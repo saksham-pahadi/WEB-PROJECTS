@@ -54,7 +54,7 @@ export default function product() {
             method: "GET",
         };
 
-        await fetch(`http://localhost:3000/api/getproducts`, requestOptions)
+        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/getproducts`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
 
