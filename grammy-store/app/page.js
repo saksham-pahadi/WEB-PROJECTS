@@ -38,7 +38,7 @@ export default function Home() {
   ];
 
 
- const viewProduct = (id) => {
+  const viewProduct = (id) => {
     router.push(`${process.env.NEXT_PUBLIC_URL}/products?id=${id}`);
 
   }
@@ -53,7 +53,7 @@ export default function Home() {
     await fetch(`${process.env.NEXT_PUBLIC_URL}/api/getproducts`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        
+
         setproductList(result.products)
 
       })
@@ -218,7 +218,7 @@ export default function Home() {
       <div className="today-deals mx-10 flex gap-3 py-3 mt-5 overflow-x-scroll no-scrollbar">
 
         {todayDeals.length > 0 && todayDeals.map((item) => {
-          return <div onClick={()=>{
+          return <div onClick={() => {
             viewProduct(item.id)
           }} key={item.id} className="product h-fit bg-gray-300 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
             <div className={`product-image h-50 w-50 rounded-xl bg-cover bg-center`} style={{ backgroundImage: `url(${item.thumbnail})` }}>
@@ -282,7 +282,7 @@ export default function Home() {
       </div>
 
 
-      <h3 className="font-semibold mx-10 text-xl">Today's Offers</h3>
+      <h3 className="font-semibold mx-10 text-xl">Today&apos;s Offers</h3>
       <div className="h-[1px] w-9/10 mx-10 mt-4 bg-gray-300"></div>
 
 
@@ -291,7 +291,7 @@ export default function Home() {
       <div className="today-deals mx-10 flex gap-3 py-3 mt-5 overflow-x-scroll no-scrollbar">
 
         {todayOffer.length > 0 && todayOffer.map((item) => {
-          return <div onClick={()=>{
+          return <div onClick={() => {
             viewProduct(item.id)
           }} key={item.id} className="product h-fit bg-gray-300 p-3 rounded-xl cursor-pointer hover:shadow-[3px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-200 ">
             <div className={`product-image h-50 w-50 rounded-xl bg-cover bg-center`} style={{ backgroundImage: `url(${item.thumbnail})` }}>

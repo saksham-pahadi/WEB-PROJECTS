@@ -46,24 +46,28 @@ const Navbar = () => {
 
 
 
-      <div className="hamburger sm:hidden">
-        Hamburger
+      <div className="hamburger sm:hidden flex items-center justify-center rounded-md bg-emerald-700">
+        <div className=' h-[25px] w-[25px] flex flex-col m-1 justify-around items-center  '>
+          <div className='h-[3px] rounded-sm w-9/10 bg-white'></div>
+          <div className='h-[3px] rounded-sm w-9/10 bg-white'></div>
+          <div className='h-[3px] rounded-sm w-9/10 bg-white'></div>
+        </div>
       </div>
 
     </nav>
 
 
-    <aside className='h-10 bg-emerald-600 flex items-center gap-5 pl-20'>
+    <aside className='h-10 bg-emerald-600 hidden md:flex  items-center gap-5 pl-20'>
       <div className='h-10 content-center px-3 bg-emerald-700'>
         Shopping By Category
       </div>
       <select className='p-0' name="" id="">
         <option className='bg-emerald-500 border-0 ' value="">Fashion</option>
         <option value="">Top</option>
-        <option value="">Men's shirt</option>
-        <option value="">Men's shoes</option>
-        <option value="">Women's dresses</option>
-        <option value="">Women's shoes</option>
+        <option value="">Men&apos;s shirt</option>
+        <option value="">Men&apos;s shoes</option>
+        <option value="">Women&apos;s dresses</option>
+        <option value="">Women&apos;s shoes</option>
       </select>
       <select className='p-0' name="" id="">
         <option className='bg-emerald-500 border-0 ' value="">Accessories</option>
