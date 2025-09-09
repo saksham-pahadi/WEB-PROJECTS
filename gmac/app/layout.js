@@ -25,10 +25,10 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       > <SessionWrapper>
-        <Navbar/>
-        {children}
-        <Footer/>
-        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+          <Navbar />
+          {children}
+          <Footer />
+          <script src="https://cdn.lordicon.com/lordicon.js"></script>
         </SessionWrapper>
       </body>
     </html>
