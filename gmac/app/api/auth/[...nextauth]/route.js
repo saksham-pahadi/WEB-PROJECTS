@@ -4,26 +4,43 @@ import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import connectDB from "@/db/connectDb";
 import User from "@/models/User";
+import bcrypt from "bcryptjs";
+import { NextResponse } from "next/server";
 
 export const authoptions = NextAuth({
     providers: [CredentialsProvider({
         name: "Credentials",
         credentials: {
-            email: { label: "Email", type: "text" }
+            email: { label: "Email", type: "text" },
+            password: { label: "Password", type: "password" }
         },
         async authorize(credentials) {
-            // console.log(credentials)
             await connectDB();
             const user = await User.findOne({ email: credentials.email });
+            const isValid = await bcrypt.compare(credentials.password, user.password);
+            // const isValid = true
+            console.log(credentials)
+            console.log(user.password)
+            console.log(isValid)
+
+            if (!isValid) {
+                // return new Response(JSON.stringify({ error: "Incorrect Password" }), { status: 400 });
+                throw new Error("Password incorrect");
+            }
             if (!user) {
                 console.log("User not found")
+                // return new Response(JSON.stringify({ error: "User not found" }), { status: 400 });
                 throw new Error("User not found");
             }
 
 
 
 
-            return { name: user.fullname, email: user.email };
+            return {
+                id: user._id.toString(),
+                name: user.name,
+                email: user.email
+            };
         }
     }),
     GitHubProvider({
@@ -46,6 +63,7 @@ export const authoptions = NextAuth({
                         email: user.email,
                         fullname: user.name || user.email.split("@")[0],
                         remember: false,
+                        profilepic:user.image,
                         provider: "google"
                     })
                 }
@@ -58,6 +76,7 @@ export const authoptions = NextAuth({
                     currentUser = await User.create({
                         email: user.email,
                         fullname: user.name || user.email.split("@")[0],
+                        profilepic:user.image,
                         remember: false,
                         provider: "github"   // ✅ fixed
                     })
@@ -68,7 +87,7 @@ export const authoptions = NextAuth({
                 // console.log(credentials)
                 await connectDB()
                 const currentUser = await User.findOne({ email: credentials.email })
-                console.log(currentUser)
+                console.log("CurrentUser", currentUser)
                 if (!currentUser) {
                     console.log("User not found")
                     return false
@@ -82,14 +101,22 @@ export const authoptions = NextAuth({
                 token.name = user.name
                 token.email = user.email
             }
+            console.log("Token", token)
             return token
         },
         async session({ session, token }) {
             session.user.id = token.id
             session.user.name = token.name
+            session.user.email = token.email;
+            console.log("Session", session)
             return session
         },
     },
+    pages: {
+    signIn: "/feed",   // your custom login page
+    error: "/login"     // redirect errors back to same page
+  },
+    
     secret: process.env.NEXTAUTH_SECRET
 });
 
