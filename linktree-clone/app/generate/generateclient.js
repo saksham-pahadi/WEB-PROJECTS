@@ -89,7 +89,7 @@ const GenerateClient = () => {
             redirect: "follow"
         };
 
-        const r = await fetch(`${NEXT_PUBLIC_HOST}/api/add`, requestOptions)
+        const r = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/add`, requestOptions)
         const result = await r.json()
         if (!result.success) {
             toast.error(result.message)
@@ -204,8 +204,7 @@ const GenerateClient = () => {
 
                         onClick={() => { addLink() }} className='bg-blue-700 text-white p-2 rounded-xl mt-2'>Add link</button>
                     {links && links.map((item, index) => {
-                        console.log(colors[index])
-                        return (<Link key={index} target='_blank' href={item.link} className={`text-white bg-${colors[index]}-400 p-2 rounded-xl font-semibold`}>{item.linktext} </Link>)
+                        return (<Link key={index} target='_blank' href={item.link} className={`text-white bg-blue-400 p-2 rounded-xl font-semibold`}>{item.linktext} </Link>)
 
                     })}
 
