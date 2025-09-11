@@ -28,6 +28,8 @@ export default function ModelViewer({ modelPath }) {
       
       <OrbitControls
         enableRotate
+        enableZoom={false}
+        enablePan={false}
         
         minPolarAngle={Math.PI / 2.4}
         maxPolarAngle={Math.PI / 2.4}

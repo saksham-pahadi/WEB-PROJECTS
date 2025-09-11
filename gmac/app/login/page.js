@@ -1,428 +1,296 @@
 "use client"
-import Link from 'next/link'
-import React from 'react'
-import Image from 'next/image'
-import { useState } from 'react'
-import { ToastContainer, toast, Bounce } from 'react-toastify';
-import { useSession, signIn, signOut } from "next-auth/react"
-import mongoose, { set } from 'mongoose'
-import connectDB from '@/db/connectDb'
-import User from '@/models/User'
+import React, { useState } from "react"
+import Image from "next/image"
+import { ToastContainer, toast } from "react-toastify"
+import { useSession, signIn } from "next-auth/react"
+import "react-toastify/dist/ReactToastify.css"
 
 const Login = () => {
-    const [form, setForm] = useState({ email: '', otp: '', remember: false, dob: '', fullname: '' });
-    const [GivenOtp, setGivenOtp] = useState("")
-    const [sendOtp, setsendOtp] = useState(false)
-    const [show, setshow] = useState(false)
-    const [remember, setremember] = useState(false)
-    const [SignUp, setSignUp] = useState(false)
-    const [loading, setloading] = useState(false)
+    const [form, setForm] = useState({
+        email: "",
+        otp: "",
+        fullname: "",
+        dob: "",
+        remember: false,
+    })
 
-
-
-
-    async function SendOtp() {
-
-
-        if (SignUp) {
-            let user = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/fetchuser/${form.email}`)
-            let res = await user.json()
-
-            if (res.getuser.length !== 0) {
-                toast.info("User already exist")
-                return;
-            }
-            if (form.fullname === "") {
-                toast.error("Please enter Name")
-                return;
-            }
-            if (form.dob === "") {
-                toast.error("Please enter Date of Birth")
-                return;
-            }
-        }
-        if (!SignUp) {
-            let user = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/fetchuser/${form.email}`)
-            let res = await user.json()
-
-            if (res.getuser.length == 0) {
-                toast.info("User not found, Create account first")
-                return;
-            }
-        }
-        if (form.email === "") {
-            toast.error("Please enter email")
-            return;
-        }
-
-
-        if (!form.email.includes("@")) {
-            toast.error("Please enter a valid email")
-            return;
-        }
-
-        // console.log("Sending OTP to ", form.email)
-
-        setloading(true)
-        setsendOtp(true)
-
-
-
-
-
-
-
-        const res = await fetch('/api/auth/requestOtp', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: form.email })
-        });
-
-        const result = await res.json();
-
-        setGivenOtp(result.otp)
-
-
-
-
-
-
-
-        toast.success("OTP sent to your email")
-        setsendOtp(true)
-        setloading(false)
-        // return result;
-    }
+    const [showOtp, setShowOtp] = useState(false)   // toggle OTP visibility
+    const [otpSent, setOtpSent] = useState(false)   // track OTP sent
+    const [loading, setLoading] = useState(false)
+    const [signUpMode, setSignUpMode] = useState(false)
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value })
-
     }
 
 
 
-    const handleLogin = async (e) => {
 
-        if (form.otp === "") {
-            toast.error("Please enter OTP")
-            return;
-        }
-        if (form.otp != GivenOtp) {
-            toast.error("Please enter valid OTP")
-            return;
+
+    
+    const sendOtp = async () => {
+        if (!form.email || !form.email.includes("@")) {
+            toast.error("Enter a valid email")
+            return
         }
 
+        if (signUpMode) {
+            if (!form.fullname) return toast.error("Enter your name")
+            if (!form.dob) return toast.error("Enter Date of Birth")
+        }
+
+        setLoading(true)
+
+        try {
+            const res = await fetch("/api/auth/requestOtp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: form.email, signup: signUpMode }),
+            })
+
+            const result = await res.json()
+            if (!res.ok) throw new Error(result.error || "Failed to send OTP")
+
+            toast.success("OTP sent to your email")
+            setOtpSent(true)
+        } catch (err) {
+            toast.error(err.message)
+        } finally {
+            setLoading(false)
+        }
+    }
 
 
 
-        await signIn("credentials", {
+
+
+
+    
+
+    //     if (form.otp === "") {
+    //         toast.error("Please enter OTP")
+    //         return;
+    //     }
+    //     if (form.otp != GivenOtp) {
+    //         toast.error("Please enter valid OTP")
+    //         return;
+    //     }
+
+
+
+
+
+    //     await signIn("credentials", {
+    //         email: form.email.toLowerCase(),
+    //         callbackUrl: "/"
+    //     });
+    // };
+    const handleLogin = async () => {
+        if (!form.otp) return toast.error("Enter OTP")
+
+        setLoading(true)
+        const res = await signIn("credentials", {
             email: form.email.toLowerCase(),
-            callbackUrl: "/feed"
-        });
-    };
+            otp: form.otp,
+            redirect: true,
+            callbackUrl: "/",
+        })
 
-
-
-
-
-
-
-    const handleSignUp = async () => {
-
-        if (form.otp === "") {
-            toast.error("Please enter OTP")
-            return;
-        }
-        if (form.otp != GivenOtp) {
-            toast.error("Please enter valid OTP")
-            return;
-        }
-
-
-
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-
-        const raw = JSON.stringify({
-            "email": form.email.toLowerCase(),
-            "remember": remember,
-            "dob": form.dob,
-            "fullname": form.fullname
-        });
-
-        const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-            redirect: "follow"
-        };
-
-        fetch("/api/signup", requestOptions)
-            .then((response) => {
-                response.text()
-
-
-            }
-
-
-
-
-
-            )
-            .then((result) => {
-                // console.log(result)
-
-            }
-
-            )
-            .catch((error) => {
-                console.log(error)
-            });
-
-
-
-
-        toast.success("Sign up successful")
-        setForm({ email: '', otp: '', remember: false, dob: '', fullname: '' })
-        setSignUp(false)
-        setsendOtp(false)
-        setloading(false)
-
-
-
-
-
+        if (res?.error) toast.error(res.error)
+        setLoading(false)
     }
 
+
+
+
+
+
+
+
+   
+    const handleSignUp = async () => {
+        if (!form.otp) return toast.error("Enter OTP")
+
+        try {
+            setLoading(true)
+            const res = await fetch("/api/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            })
+
+            const result = await res.json()
+            if (!res.ok) throw new Error(result.error || "Signup failed")
+
+            toast.success("Signup successful! Please login.")
+            setForm({ email: "", otp: "", fullname: "", dob: "", remember: false })
+            setSignUpMode(false)
+            setOtpSent(false)
+        } catch (err) {
+            toast.error(err.message)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
+   
     return (
-        <div className='min-h-screen flex flex-col md:flex-row'>
+        <div className="min-h-screen flex flex-col md:flex-row">
             <ToastContainer />
-            <div className='right md:w-1/3'>
 
+            {/* Right: Form */}
+            <div className="right md:w-1/3 p-6">
+                <form className="bg-white shadow-lg rounded-lg p-6">
+                    <h1 className="text-3xl font-bold text-center">
+                        {signUpMode ? "Sign Up" : "Sign In"}
+                    </h1>
+                    <p className="text-center text-gray-400 mb-4">
+                        {signUpMode
+                            ? "Create a new account."
+                            : "Login to continue your account."}
+                    </p>
 
-                
+                    {signUpMode && (
+                        <>
+                            <input
+                                name="fullname"
+                                value={form.fullname}
+                                onChange={handleChange}
+                                placeholder="Full Name"
+                                className="w-full p-2 border rounded-lg mt-3"
+                            />
+                            <input
+                                name="dob"
+                                value={form.dob}
+                                onChange={handleChange}
+                                type="date"
+                                className="w-full p-2 border rounded-lg mt-3"
+                            />
+                        </>
+                    )}
 
+                    <input
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        type="email"
+                        placeholder="Email"
+                        className="w-full p-2 border rounded-lg mt-3"
+                    />
 
-
-                {!SignUp && <form className='w-9/10 mx-auto bg-grey-700 m-10 min-h-[75vh]' method="post">
-
-                    <h1 className="text-3xl font-bold m-2 text-center">Sign in</h1>
-                    <p className='text-center text-gray-400 mb-4'>Please login to continue your account.</p>
-                    <label htmlFor="email" className="relative">
-                        <input
-                            name='email'
-                            value={form.email}
-                            onChange={handleChange}
-                            type="email"
-                            id="email"
-                            placeholder=""
-                            className="peer p-2 text-lg  mt-2 w-full rounded-lg border-2 border-blue-500   dark:border-gray-500 dark:bg-white dark:text-gray-900 focus:border-blue-500 focus:outline-none "
-                        />
-
-                        <span className="absolute rounded px-1 inset-y-2 start-3 -translate-y-9 bg-white text-blue-500  transition-transform h-6 peer-placeholder-shown:translate-y-[-12px] peer-focus:-translate-y-9 peer-focus:dark:text-blue-500 dark:bg-white dark:text-gray-500" >
-                            Email
-                        </span>
-                    </label>
-                    <label htmlFor="otp" className="relative">
-                        <input
-                            name='otp'
-                            value={form.otp}
-                            onKeyDown={(evt) => (evt.key === '.' || evt.key === '-' || evt.key === '+' || evt.key === 'e' || evt.key === 'E') && evt.preventDefault()}
-
-                            onChange={handleChange}
-                            type={`${show ? "number" : "password"}`}
-                            id="otp"
-                            placeholder="OTP"
-                            className="peer p-2 text-lg  mt-5 w-full rounded-lg border-2 border-blue-500   dark:border-gray-500 dark:bg-white dark:text-gray-900 focus:border-blue-500 focus:outline-none remove-arrow "
-                        />
-                        <span>
+                    {otpSent && (
+                        <div className="relative mt-3">
+                            <input
+                                name="otp"
+                                value={form.otp}
+                                onChange={handleChange}
+                                type={showOtp ? "text" : "password"}
+                                placeholder="OTP"
+                                className="w-full p-2 border rounded-lg"
+                            />
                             <Image
-                                src={`${show ? "/hidden.svg" : "/show.svg"}`}
-                                onClick={() => { setshow(!show) }}
-                                alt="show"
+                                src={showOtp ? "/hidden.svg" : "/show.svg"}
+                                alt="toggle"
                                 width={20}
                                 height={20}
-                                className='absolute top-1/2 end-3 -translate-y-1/2 cursor-pointer'
-                            >
+                                onClick={() => setShowOtp(!showOtp)}
+                                className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
+                            />
+                        </div>
+                    )}
 
-                            </Image>
-                        </span>
+                    {!otpSent ? (
+                        <button
+                            type="button"
+                            disabled={loading}
+                            onClick={sendOtp}
+                            className={`w-full mt-4 p-2 rounded-lg text-white ${loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+                                }`}
+                        >
+                            {loading ? "Sending..." : "Get OTP"}
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            disabled={loading}
+                            onClick={signUpMode ? handleSignUp : handleLogin}
+                            className={`w-full mt-4 p-2 rounded-lg text-white ${loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+                                }`}
+                        >
+                            {signUpMode ? "Sign Up" : "Sign In"}
+                        </button>
+                    )}
 
+                    <p className="text-center mt-4 text-gray-400">
+                        {signUpMode ? (
+                            <>
+                                Already have an account?{" "}
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setSignUpMode(false)
+                                        setOtpSent(false)
+                                    }}
+                                    className="text-blue-500 underline"
+                                >
+                                    Sign In
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                Need an account?{" "}
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setSignUpMode(true)
+                                        setOtpSent(false)
+                                    }}
+                                    className="text-blue-500 underline"
+                                >
+                                    Sign Up
+                                </button>
+                            </>
+                        )}
+                    </p>
 
+                    {/* OAuth Providers */}
+                    <div className="mt-6 flex flex-col gap-3">
+                        <button
+                            type="button"
+                            onClick={() => signIn("github", { callbackUrl: "/" })}
+                            className="flex items-center justify-center gap-2 border p-2 rounded-lg hover:bg-gray-100"
+                        >
+                            <img src="github.svg" className="h-6 w-6" alt="GitHub" />
+                            Continue with GitHub
+                        </button>
 
-                    </label>
-                    <p className='mt-4 text-md text-blue-500 underline inline-block' onClick={() => { SendOtp() }}>{sendOtp ? "Resend OTP" : "Send OTP"}</p>
-
-
-                    <div className='flex justify-between items-center mt-4'>
-
-
-                        <label htmlFor="remember">
-                            <input type="checkbox" name=""
-                                onChange={() => setremember(!remember)} value={"yes"} checked={remember} id="remember" />
-                            <span className='text-gray-500 mx-2'>Keep me logged in</span>
-                        </label>
+                        <button
+                            type="button"
+                            onClick={() => signIn("google", { callbackUrl: "/" })}
+                            className="flex items-center justify-center gap-2 border p-2 rounded-lg hover:bg-gray-100"
+                        >
+                            <img src="google.svg" className="h-6 w-6" alt="Google" />
+                            Continue with Google
+                        </button>
                     </div>
-                    <button onClick={() => { handleLogin() }} type="button" className='w-full bg-blue-500 text-white p-2 rounded-lg mt-5 hover:bg-blue-600'>Sign in</button>
-                    <p className='text-center text-gray-400 mt-4'>Need an account? <button className='text-blue-500 underline' onClick={() => { setSignUp(true), setsendOtp(false), setloading(false) }}>Create one</button></p>
-                    <div className=' flex flex-col items-center justify-center mt-5 gap-5 p-2 cursor-pointer' onClick={() => { signIn("google", { callbackUrl: "/" }) }}>
-                        {/* <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png" className='h-10' alt="" />
-                        <p>Continue with Google</p> */}
-                    <button onClick={() => { signIn("github", { callbackUrl: "/feed" }) }}
-                        className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md max-w-xs px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                        <img className="h-6 w-6 mr-2" src="github.svg" alt="" />
-
-                        <span>Continue with Github</span>
-                    </button>
-                    <button onClick={() => { signIn("google", { callbackUrl: "/feed" }) }}
-                        className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md max-w-xs px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                        <img className="h-6 w-6 mr-2" src="google.svg" alt="" />
-                        <span>Continue with Google</span>
-                    </button>
-                            </div>
-                </form>}
-
-
-
-                {SignUp && <form className='w-9/10 mx-auto bg-grey-700 m-10 min-h-[75vh]' method="post">
-
-                    <h1 className="text-3xl font-bold m-2 text-center">Sign Up</h1>
-                    <p className='text-center text-gray-400 mb-4'>Sign up to enjoy the feature of HD</p>
-
-
-                    <label htmlFor="fullname" className="relative">
-                        <input
-                            name='fullname'
-                            value={form.fullname}
-                            onChange={handleChange}
-                            type="text"
-                            id="fullname"
-                            placeholder=""
-                            className="peer p-2 text-lg  mt-4 w-full rounded-lg border-2 border-blue-500   dark:border-gray-500 dark:bg-white dark:text-gray-900 focus:border-blue-500 focus:outline-none "
-                        />
-
-                        <span className="absolute rounded px-1 inset-y-2 start-3 -translate-y-9 bg-white text-blue-500  transition-transform h-6 peer-placeholder-shown:translate-y-[-12px] peer-focus:-translate-y-9 peer-focus:dark:text-blue-500 dark:bg-white dark:text-gray-500" >
-                            Name
-                        </span>
-                    </label>
-
-
-
-
-
-
-                    <label htmlFor="dob" className="relative">
-                        <input
-                            name='dob'
-                            value={form.dob}
-                            onChange={handleChange}
-                            type="date"
-                            id="dob"
-                            placeholder=""
-                            className="peer p-2 text-lg  mt-4 w-full rounded-lg border-2 border-blue-500   dark:border-gray-500 dark:bg-white dark:text-gray-900 focus:border-blue-500 focus:outline-none "
-                        />
-
-                        <span className="absolute rounded px-1 inset-y-2 start-3 -translate-y-9 bg-white text-blue-500  transition-transform h-6 peer-placeholder-shown:translate-y-[-12px] peer-focus:-translate-y-9 peer-focus:dark:text-blue-500 dark:bg-white dark:text-gray-500" >
-                            Date of Birth
-                        </span>
-                    </label>
-
-
-
-
-                    <label htmlFor="email" className="relative">
-                        <input
-                            name='email'
-                            value={form.email}
-                            onChange={handleChange}
-                            type="email"
-                            id="email"
-                            placeholder=""
-                            className="peer p-2 text-lg  mt-4 w-full rounded-lg border-2 border-blue-500   dark:border-gray-500 dark:bg-white dark:text-gray-900 focus:border-blue-500 focus:outline-none "
-                        />
-
-                        <span className="absolute rounded px-1 inset-y-2 start-3 -translate-y-9 bg-white text-blue-500  transition-transform h-6 peer-placeholder-shown:translate-y-[-12px] peer-focus:-translate-y-9 peer-focus:dark:text-blue-500 dark:bg-white dark:text-gray-500" >
-                            Email
-                        </span>
-                    </label>
-
-
-
-                    {sendOtp && <label htmlFor="otp" className="relative">
-                        <input
-                            name='otp'
-                            value={form.otp}
-                            onKeyDown={(evt) => (evt.key === '.' || evt.key === '-' || evt.key === '+' || evt.key === 'e' || evt.key === 'E') && evt.preventDefault()}
-
-                            onChange={handleChange}
-                            type={`${show ? "number" : "password"}`}
-                            id="otp"
-                            placeholder="OTP"
-                            className="peer p-2 text-lg  mt-5 w-full rounded-lg border-2 border-blue-500   dark:border-gray-500 dark:bg-white dark:text-gray-900 focus:border-blue-500 focus:outline-none remove-arrow "
-                        />
-                        <span>
-                            <Image
-                                src={`${show ? "/hidden.svg" : "/show.svg"}`}
-                                onClick={() => { setshow(!show) }}
-                                alt="show"
-                                width={20}
-                                height={20}
-                                className='absolute top-1/2 end-3 -translate-y-1/2 cursor-pointer'
-                            >
-
-                            </Image>
-                        </span>
-
-
-
-                    </label>}
-
-
-
-
-                    {!sendOtp ? <button type='button' disabled={loading} className={`w-full ${loading ? 'cursor-wait bg-gray-500' : 'cursor-pointer bg-blue-500 hover:bg-blue-600 '}  text-white p-2 rounded-lg mt-5 text-center`} onClick={() => { SendOtp() }}>Get OTP</button>
-
-                        : <button type="button" className='w-full bg-blue-500 text-white p-2 rounded-lg mt-5 hover:bg-blue-600 text-center' onClick={() => { handleSignUp(), setloading(true) }}>Sign up</button>}
-
-
-
-
-
-
-
-
-
-
-
-
-                    <p className='text-center text-gray-400 mt-4'>Already have an account? <button className='text-blue-500 underline'
-                        onClick={() => { setSignUp(false), setsendOtp(false) }}>Sign in</button></p>
-
-                    <div className=' flex flex-col items-center justify-center mt-5 gap-5 p-2 cursor-pointer' onClick={() => { signIn("google", { callbackUrl: "/" }) }}>
-                        {/* <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png" className='h-10' alt="" />
-                        <p>Continue with Google</p> */}
-                    <button onClick={() => { signIn("github", { callbackUrl: "/feed" }) }}
-                        className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md max-w-xs px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                        <img className="h-6 w-6 mr-2" src="github.svg" alt="" />
-
-                        <span>Continue with Github</span>
-                    </button>
-                    <button onClick={() => { signIn("google", { callbackUrl: "/feed" }) }}
-                        className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md max-w-xs px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                        <img className="h-6 w-6 mr-2" src="google.svg" alt="" />
-                        <span>Continue with Google</span>
-                    </button>
-                            </div>
-                </form>}
+                </form>
             </div>
-            <div className='left m-2 hidden  md:flex w-2/3 rounded-xl'>
 
-
-                <Image src="/GMAC.png" alt="login" width={200} height={200} className='w-full h-fit object-cover rounded-xl' />
-                
+            {/* Left: Image */}
+            <div className="left hidden md:flex w-2/3 p-2">
+                <Image
+                    src="/GMAC.png"
+                    alt="login"
+                    width={600}
+                    height={600}
+                    className="w-full h-fit object-cover rounded-xl"
+                />
             </div>
         </div>
     )
 }
+
+
 
 export default Login

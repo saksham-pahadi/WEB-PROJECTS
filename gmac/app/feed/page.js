@@ -7,11 +7,12 @@ import { useSession, signIn, signOut } from "next-auth/react"
 
 const page = () => {
     const { data: session } = useSession()
+    console.log("Session",session)
 
 
-    // if (!session) {
-    //     redirect("/login")
-    // }
+    if (!session) {
+        redirect("/login")
+    }
   return (
     <div>
       {session && <div>{session.user.email}</div> }

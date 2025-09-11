@@ -5,18 +5,24 @@ import { useState } from "react";
 import * as React from 'react';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
+import { useSession, signIn, signOut } from "next-auth/react"
+import { redirect } from 'next/navigation'
 
 export default function Home() {
   const [modelpath, setmodelpath] = useState("/Robot.glb")
+  const { data: session } = useSession()
+   if (session) {
+        redirect("/feed")
+    }
 
   return (<>
     <main className="">
 
       {/* rotate robot */}
 
-      <div className=" h-[250px] fixed  -right-25 -bottom-22 z-10 ">
+      <div className="h-[150px] md:h-[250px] fixed -right-30 md:-right-25 -bottom-12 md:-bottom-22 z-10  ">
         <ModelViewer modelPath={modelpath} />
-        <div className="bg-gray-400 relative rotate-x-[70deg] blur-sm left-33 h-10 w-10 rounded-[200px] -top-30 z-5">
+        <div className="bg-gray-400 relative rotate-x-[70deg] blur-sm left-34 md:left-33 h-5 w-7 md:h-10 md:w-10 rounded-[200px] -top-18 md:-top-30 z-5">
 
         </div>
       </div>
