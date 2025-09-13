@@ -1,10 +1,16 @@
+"use client"
 import React from 'react'
+import { usePathname } from "next/navigation";
+import { useState } from 'react';
 
 const Footer = () => {
+  const pathname = usePathname();
+  const showFooter = ["/", "/login"].includes(pathname);
+  
   return (
     
 
-<footer className="bg-white dark:bg-purple-900">
+<footer className={`bg-white ${!showFooter?"hidden md:block":""} dark:bg-purple-900`}>
   <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
     <div className="md:flex md:justify-between">
       <div className="mb-6 md:mb-0">

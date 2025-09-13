@@ -18,18 +18,12 @@ export const authoptions = NextAuth({
             await connectDB();
             const user = await User.findOne({ email: credentials.email });
             const isValid = await bcrypt.compare(credentials.password, user.password);
-            // const isValid = true
-            console.log(credentials)
-            console.log(user.password)
-            console.log(isValid)
+
 
             if (!isValid) {
-                // return new Response(JSON.stringify({ error: "Incorrect Password" }), { status: 400 });
                 throw new Error("Password incorrect");
             }
             if (!user) {
-                console.log("User not found")
-                // return new Response(JSON.stringify({ error: "User not found" }), { status: 400 });
                 throw new Error("User not found");
             }
 
@@ -63,9 +57,17 @@ export const authoptions = NextAuth({
                         email: user.email,
                         fullname: user.name || user.email.split("@")[0],
                         remember: false,
-                        profilepic:user.image,
+                        profilepic: user.image,
                         provider: "google"
                     })
+                }
+                if (currentUser) {
+                    let PFP = await currentUser.profilepic
+                    if (PFP === null) {
+                        currentUser.profilepic = user.image;
+                        await currentUser.save();
+                    }
+
                 }
                 return true
             }
@@ -76,22 +78,29 @@ export const authoptions = NextAuth({
                     currentUser = await User.create({
                         email: user.email,
                         fullname: user.name || user.email.split("@")[0],
-                        profilepic:user.image,
+                        profilepic: user.image,
                         remember: false,
-                        provider: "github"   // ✅ fixed
+                        provider: "github"
                     })
+                }
+                if (currentUser) {
+                    let PFP = await currentUser.profilepic
+                    if (PFP === null) {
+                        currentUser.profilepic = user.image;
+                        await currentUser.save();
+                    }
+
                 }
                 return true
             }
             if (account.provider === "credentials") {
-                // console.log(credentials)
                 await connectDB()
                 const currentUser = await User.findOne({ email: credentials.email })
-                console.log("CurrentUser", currentUser)
                 if (!currentUser) {
                     console.log("User not found")
                     return false
                 }
+
                 return true
             }
         },
@@ -101,22 +110,24 @@ export const authoptions = NextAuth({
                 token.name = user.name
                 token.email = user.email
             }
-            console.log("Token", token)
+            // console.log("Token", token)
             return token
         },
         async session({ session, token }) {
+            const dbUser = await User.findOne({ email: session.user.email });
             session.user.id = token.id
             session.user.name = token.name
             session.user.email = token.email;
-            console.log("Session", session)
+            session.user.image = dbUser.profilepic;
+            // console.log("Session", session)
             return session
         },
     },
     pages: {
-    signIn: "/feed",   // your custom login page
-    error: "/login"     // redirect errors back to same page
-  },
-    
+        signIn: "/feed",
+        error: "/login"
+    },
+
     secret: process.env.NEXTAUTH_SECRET
 });
 

@@ -2,22 +2,32 @@
 import Link from 'next/link'
 import React from 'react'
 import { usePathname } from "next/navigation";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession, signIn, signOut } from "next-auth/react"
 
 const Navbar = () => {
     const pathname = usePathname();
     const { data: session } = useSession()
+    const [PFP, setPFP] = useState("")
+    const showNavbar = ["/", "/login"].includes(pathname);
 
-    if(session){
+
+
+
+
+
+    if (session) {
 
         console.log("Session in nav", session.user.image)
     }
 
     const [navOptions, setnavOptions] = useState({ Home: true, About: false, Connect: false })
     console.log(pathname)
-    return (
-        <nav className='m-0 sm:mx-5 flex justify-between items-center  p-3 px-6 rounded-full'>
+
+
+
+    return (<>
+        {showNavbar && <nav className='m-0 sm:mx-5 flex justify-between items-center  p-3 px-6 rounded-full'>
             <div className="logo h-15 mb-3">
                 <img className='h-15 z-5' src="GMAC.png" alt="" />
                 <div className="bg-black opacity-30 relative rotate-x-[75deg] blur-md left-6 h-10 w-15 rounded-[200px] -top-4 z-4">
@@ -44,8 +54,8 @@ const Navbar = () => {
 
 
 
-        </nav>
-    )
+        </nav>}
+    </>)
 }
 
 export default Navbar

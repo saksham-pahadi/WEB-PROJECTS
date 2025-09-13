@@ -3,9 +3,15 @@ import React, { useState } from "react"
 import Image from "next/image"
 import { ToastContainer, toast } from "react-toastify"
 import { useSession, signIn } from "next-auth/react"
+import { redirect } from 'next/navigation'
 import "react-toastify/dist/ReactToastify.css"
 
 const Login = () => {
+    const { data: session } = useSession()
+    if(session){
+        redirect("/feed")
+
+    }
     const [form, setForm] = useState({
         email: "",
         otp: "",
@@ -107,9 +113,9 @@ const Login = () => {
 
         if (!res.ok) {
             toast.error(res.error)
-            console.log("Login failed:", res.error); // shows "Incorrect password"
+            // console.log("Login failed:", res.error); // shows "Incorrect password"
         } else {
-            console.log("Login success");
+            // console.log("Login success");
         }
         setLoading(false)
     }
@@ -124,7 +130,7 @@ const Login = () => {
 
     const handleSignUp = async () => {
         if (!form.otp) return toast.error("Enter OTP")
-        console.log("form", form)
+        // console.log("form", form)
 
         try {
             setLoading(true)
