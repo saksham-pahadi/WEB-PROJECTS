@@ -1,8 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-    experimental: {
-    allowedDevOrigins: ["https://781b1bcfb96f.ngrok-free.app"],
-  },
-};
+const nextConfig = {};
 
 export default nextConfig;
