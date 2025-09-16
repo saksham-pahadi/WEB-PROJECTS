@@ -26,6 +26,9 @@ export async function POST(req) {
       },
     };
 
+    console.log("RETURN_URL:", `${process.env.NEXT_PUBLIC_BASE_URL}/payment/result?order_id={order_id}`);
+
+
     const res = await fetch(`${process.env.CF_API_BASE}/orders`, {
       method: "POST",
       headers: {
