@@ -3,6 +3,8 @@ import "./globals.css";
 import Navbar from "@/component/Navbar";
 import Footer from "@/component/Footer";
 import SessionWrapper from "@/component/SessionWrapper";
+import Script from "next/script";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,13 +24,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head><meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" /></head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       > <SessionWrapper>
           <Navbar />
           {children}
           <Footer />
-          <script src="https://cdn.lordicon.com/lordicon.js"></script>
+          <Script src="https://cdn.lordicon.com/lordicon.js" strategy="afterInteractive" />
+          <Script src="https://sdk.cashfree.com/js/v3/cashfree.js" strategy="afterInteractive" />
         </SessionWrapper>
       </body>
     </html>

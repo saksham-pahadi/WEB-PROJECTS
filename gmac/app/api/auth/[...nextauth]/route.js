@@ -124,7 +124,7 @@ export const authoptions = NextAuth({
         },
     },
     pages: {
-        signIn: "/feed",
+        signIn: "/home",
         error: "/login"
     },
 

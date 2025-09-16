@@ -12,7 +12,7 @@ export default function Home() {
   const [modelpath, setmodelpath] = useState("/Robot.glb")
   const { data: session } = useSession()
    if (session) {
-        redirect("/feed")
+        redirect("/home")
     }
 
   return (<>

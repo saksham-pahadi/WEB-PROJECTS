@@ -16,13 +16,10 @@ const Navbar = () => {
 
 
 
-    if (session) {
-
-        console.log("Session in nav", session.user.image)
-    }
+    
 
     const [navOptions, setnavOptions] = useState({ Home: true, About: false, Connect: false })
-    console.log(pathname)
+    // console.log(pathname)
 
 
 

@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css"
 const Login = () => {
     const { data: session } = useSession()
     if(session){
-        redirect("/feed")
+        redirect("/home")
 
     }
     const [form, setForm] = useState({
@@ -108,7 +108,7 @@ const Login = () => {
         const res = await signIn("credentials", {
             email: form.email.toLowerCase(),
             password: form.password,
-            callbackUrl: "/",
+            callbackUrl: "/home",
         })
 
         if (!res.ok) {
