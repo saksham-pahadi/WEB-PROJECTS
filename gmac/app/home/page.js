@@ -7,6 +7,7 @@ import { useSession, signIn, signOut } from "next-auth/react"
 import Profile from '@/component/Profile'
 import Projects from '@/component/Projects'
 import Image from 'next/image'
+import CheckoutPage from '@/component/Checkout'
 
 
 

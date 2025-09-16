@@ -2,9 +2,9 @@
 "use client";
 import { useState } from "react";
 
-export default function CheckoutPage() {
+export default function CheckoutPage({money}) {
   const [loading, setLoading] = useState(false);
-  const [amount, setAmount] = useState("100.00"); // sample
+  const [amount, setAmount] = useState(money); // sample
   const [msg, setMsg] = useState("");
 
   async function loadCashfreeSdk() {
