@@ -11,12 +11,12 @@ import { redirect } from 'next/navigation'
 export default function Home() {
   const [modelpath, setmodelpath] = useState("/Robot.glb")
   const { data: session } = useSession()
-   if (session) {
-        redirect("/home")
-    }
+  if (session) {
+    redirect("/home")
+  }
 
   return (<>
-    <main className="">
+    <main className="overflow-hidden">
 
       {/* rotate robot */}
 
@@ -60,7 +60,7 @@ export default function Home() {
         </div>
 
 
-        <div className="model flex items-center justify-center h-[85vh] pb-10 w-full sm:w-1/2 rounded-4xl bg-gradient-to-bl from-purple-400 via-purple-200  to-purple-500   ">
+        <div className="model flex items-center justify-center h-[50vh] md:h-[65vh] lg:h-[85vh] pb-10 w-full sm:w-1/2 rounded-4xl bg-gradient-to-bl from-purple-400 via-purple-200  to-purple-500   ">
           <div className="w-2/3 h-2/3 flex items-center justify-center">
 
 
@@ -117,26 +117,22 @@ export default function Home() {
 
       {/* Share Engage fund Repeat  */}
 
-      <div className="h-[60vh] lg:mb-50 ">
+      <div className="h-fit lg:h-[90vh] w-fit mx-auto  ">
+
+        <div className=" w-[90vw] h-fit sm:h-[50vh] md:h-[60vh] lg:h-[80vh] bg-gradient-to-br  from-purple-400 via-purple-300  to-purple-500 sm:bg-none mb-5 rounded-4xl">
 
 
-        <div className=" w-[90vw] h-[50vh] sm:h-[50vh] md:h-[60vh] lg:h-[80vh]  mx-auto m-5 bg-gradient-to-br from-purple-400 via-purple-300  to-purple-500 sm:[clip-path:polygon(0%_0%,100%_0%,99%_90%,0%_100%)] rounded-4xl ">
+          <div className=" w-[90vw] h-fit sm:h-[50vh] md:h-[60vh] lg:h-[80vh]  mx-auto m-5 sm:bg-gradient-to-br sm:from-purple-400 sm:via-purple-300  sm:to-purple-500 sm:[clip-path:polygon(0%_0%,100%_0%,99%_90%,0%_100%)] sm:rounded-4xl pb-4 ">
 
-          <h2 className="sm:text-left text-4xl lg:text-7xl md:text-5xl font-bold text-center text-white pt-10 mx-5">Share - Engage - Fund - Repeat</h2>
-          <p className="text-center text-white w-1/2 ml-5 sm:text-left mt-5 md:text-xl md:mt-7 lg:mt-10 lg:text-2xl">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptate iste nostrum aperiam odit qui ab quas corrupti sint, ratione, sapiente consectetur suscipit quos, perspiciatis quis.</p>
+            <h2 className="sm:text-left text-4xl lg:text-7xl md:text-5xl font-bold text-center text-white pt-10 mx-5">Share - Engage - Fund - Repeat</h2>
+
+
+            <p className="text-center text-white w-full sm:w-1/2 md:w-2/3 sm:ml-5  sm:text-left mt-5 md:text-xl md:mt-7 lg:mt-10 lg:text-2xl ">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptate iste nostrum aperiam odit qui ab quas corrupti sint, ratione, sapiente consectetur suscipit quos, perspiciatis quis.</p>
+          </div>
+          <img className="h-50  sm:h-60 md:h-70 lg:h-80 relative   left-[30%] bottom-0 sm:bottom-65 sm:left-[68%]  md:left-[73%] md:bottom-75  lg:left-[80%] lg:bottom-85 z-5" src="developer.png" alt="" />
         </div>
-        <img className="h-50 sm:h-70 relative left-[55%] bottom-45 sm:bottom-75 sm:-right-[100px]  md:left-[65%] lg:left-[80%] z-5" src="developer.png" alt="" />
       </div>
-      <div className="h-[60vh] lg:mb-50 ">
 
-
-        <div className=" w-[90vw] h-[50vh] sm:h-[50vh] md:h-[60vh] lg:h-[80vh]  mx-auto m-5 bg-gradient-to-br from-purple-400 via-purple-300  to-purple-500 sm:[clip-path:polygon(0%_0%,100%_0%,99%_90%,0%_100%)] rounded-4xl ">
-
-          <h2 className="sm:text-left text-4xl lg:text-7xl md:text-5xl font-bold text-center text-white pt-10 mx-5">Share - Engage - Fund - Repeat</h2>
-          <p className="text-center text-white w-1/2 ml-5 sm:text-left mt-5 md:text-xl md:mt-7 lg:mt-10 lg:text-2xl">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptate iste nostrum aperiam odit qui ab quas corrupti sint, ratione, sapiente consectetur suscipit quos, perspiciatis quis.</p>
-        </div>
-        <img className="h-50 sm:h-70 relative left-[55%] bottom-45 sm:bottom-75 sm:-right-[100px]  md:left-[65%] lg:left-[80%] z-5" src="developer.png" alt="" />
-      </div>
 
 
 

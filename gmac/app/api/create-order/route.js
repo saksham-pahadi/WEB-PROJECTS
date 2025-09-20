@@ -1,64 +1,68 @@
-// app/api/create-order/route.js
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
     const body = await req.json();
-    // expected from client: { amount, orderId, customer: {id,email,phone} }
-    const { amount, orderId, customer } = body;
 
-    if (!amount || !orderId) {
-      return NextResponse.json({ error: "amount and orderId required" }, { status: 400 });
-    }
+    // Decide environment
+    const isProd = process.env.CASHFREE_ENV === "prod";
+
+    const BASE_URL = isProd
+    ? process.env.CF_API_BASE_PROD
+    : process.env.CF_API_BASE_TEST
+
+    const APP_ID = isProd
+      ? process.env.CASHFREE_APP_ID_PROD
+      : process.env.CASHFREE_APP_ID_TEST;
+
+    const SECRET_KEY = isProd
+      ? process.env.CASHFREE_SECRET_KEY_PROD
+      : process.env.CASHFREE_SECRET_KEY_TEST;
+
+    // Build return URL safely (avoid double slashes)
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/+$/, "");
+    const returnUrl = `${baseUrl}/payment/result?order_id={order_id}`;
+    const order_Id=`order_${Date.now()}`
 
     const payload = {
-      order_id: orderId,
-      order_amount: String(amount),
+      order_amount: body.amount,
       order_currency: "INR",
+      order_id: order_Id,
       customer_details: {
-        customer_id: customer?.id || orderId,
-        customer_email: customer?.email || "",
-        customer_phone: customer?.phone || "",
+        customer_id: body.customer.id,
+        customer_email: body.customer.email,
+        customer_phone: body.customer.phone,
       },
-      // return_url supports placeholder {order_id} which Cashfree will replace
       order_meta: {
-        return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/result?order_id={order_id}`,
+        return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/result?order_id=${order_Id}`,
       },
     };
 
-    console.log("RETURN_URL:", `${process.env.NEXT_PUBLIC_BASE_URL}/payment/result?order_id={order_id}`);
+    console.log("🌀 Cashfree Env:", isProd ? "PROD" : "TEST");
+    console.log("🌀 Return URL:", returnUrl);
 
-
-    const res = await fetch(`${process.env.CF_API_BASE}/orders`, {
+    const res = await fetch(`${BASE_URL}/orders`, {
       method: "POST",
       headers: {
+        "x-client-id": APP_ID,
+        "x-client-secret": SECRET_KEY,
+        "x-api-version": "2022-09-01",
         "Content-Type": "application/json",
-        "x-client-id": process.env.CF_CLIENT_ID,
-        "x-client-secret": process.env.CF_CLIENT_SECRET,
-        "x-api-version": "2022-09-01", 
-        Accept: "application/json",
       },
       body: JSON.stringify(payload),
     });
 
     const data = await res.json();
+    console.log(data)
 
     if (!res.ok) {
-      console.error("Cashfree create-order error:", data);
-      return NextResponse.json({ error: "Failed to create order", details: data }, { status: 502 });
+      console.error("❌ Cashfree error:", data);
+      return NextResponse.json({ error: "Failed to create order", details: data }, { status: 400 });
     }
 
-    // extract payment session id robustly (field names can vary)
-    const paymentSessionId =
-      data?.payment_session?.id ||
-      data?.payment_sessions?.[0]?.id ||
-      data?.paymentSessionId ||
-      data?.payment_session_id ||
-      null;
-
-    return NextResponse.json({ raw: data, paymentSessionId });
+    return NextResponse.json(data);
   } catch (err) {
-    console.error(err);
-    return NextResponse.json({ error: "server error", details: String(err) }, { status: 500 });
+    console.error("❌ Server error:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

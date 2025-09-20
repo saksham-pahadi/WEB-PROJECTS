@@ -25,73 +25,117 @@ const Profile = ({ Username }) => {
     console.log(session)
 
     return (
-      <div className='flex justify-center gap-2 m-2 flex-wrap'>
+      <div className='flex justify-center gap-2  flex-wrap h-screen overflow-x-scroll no-scrollbar '>
 
 
 
-        <aside className="aside rounded-lg w-full lg:w-1/4 bg-white p-5 flex flex-col
+
+
+          <aside className="aside rounded-lg w-full lg:w-1/4 bg-white p-5 flex flex-col
         items-center  md:items-start">
 
-          <div>
+            <div>
 
-            {session.user.image ? <img className='h-50 w-50' src={`${session.user.image}`} alt="" /> : <div className='h-50 w-50 pb-2 bg-slate-600 flex items-center justify-center rounded-full text-9xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
-            {edit && <div className=' bg-slate-600  w-7 h-7 rounded-lg flex items-center justify-center relative bottom-10 left-40 m-0'>
+              {session.user.image ? <img className='h-25 md:h-50 md:w-50' src={`${session.user.image}`} alt="" /> : <div className='h-50 w-50 pb-2 bg-slate-600 flex items-center justify-center rounded-full text-9xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
+              {edit && <div className=' bg-slate-600 w-5 h-5  md:w-7 md:h-7 rounded-lg flex items-center justify-center relative bottom-5 left-18 md:bottom-10 md:left-40 m-0'>
 
-              <input type="file" name="" id="dropzone-file" className="hidden " />
-              <label htmlFor="dropzone-file" className=''>
-                <img className=' ' src="pencil.svg" alt="" />
+                <input type="file" name="" id="dropzone-file" className="hidden " />
+                <label htmlFor="dropzone-file" className='h-4 w-4 md:h-auto md:w-auto'>
+                  <img className=' ' src="pencil.svg" alt="" />
 
-              </label>
-            </div>}
-          </div>
-          <h3 className='text-xl font-bold'>{session.user.name}</h3><h3>@username</h3>
-          <p className='text-center md:text-left'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati vel blanditiis deserunt magni? Esse, laboriosam corporis. Officiis quia ratione nisi.</p>
-          <button className='bg-slate-600 p-2 m-2 rounded-lg md:w-full' onClick={() => { setedit(!edit) }}>{!edit?"Edit Profile":"Save"}</button>
-        </aside>
-
-
+                </label>
+              </div>}
+            </div>
+            <h3 className='text-xl font-bold'>{session.user.name}</h3><h3>@username</h3>
+            <p className='text-center md:text-left'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati vel blanditiis deserunt magni? Esse, laboriosam corporis. Officiis quia ratione nisi.</p>
+            <button className='bg-white border p-2 m-2 rounded-lg w-full sm:w-1/2 md:w-full' onClick={() => { setedit(!edit) }}>{!edit ? "Edit Profile" : "Save"}</button>
+          </aside>
 
 
-        <main className='main rounded-lg w-full lg:w-2/3 bg-white flex p-5 gap-5 flex-wrap justify-evenly'>
 
-          <div className="supporters  ">
-            {/* list all supporters as leaderboard */}
-            <h1 className='text-xl font-bold mb-3'>Supporters</h1>
-            <ul>
-              <li className='flex items-center my-4 gap-2'>
-                <lord-icon
-                  src="https://cdn.lordicon.com/hhljfoaj.json"
-                  trigger="hover"
-                  stroke="light"
-                  state="hover-looking-around"
-                  style={{ "width": 33 }}>
-                </lord-icon>
-                <span>Subhanm donated <span className='font-bold'>$30</span>  with message "I support you bro. Lots of ❤️"</span>
-              </li>
-              <li className='flex items-center my-4 gap-2'>
-                <lord-icon
-                  src="https://cdn.lordicon.com/hhljfoaj.json"
-                  trigger="hover"
-                  stroke="light"
-                  state="hover-looking-around"
-                  style={{ "width": 33 }}>
-                </lord-icon>
-                <span>Krishna donated <span className='font-bold'>$28</span>  with message "I support you bro. Lots of ❤️"</span>
-              </li>
-              <li className='flex items-center my-4 gap-2'>
-                <lord-icon
-                  src="https://cdn.lordicon.com/hhljfoaj.json"
-                  trigger="hover"
-                  stroke="light"
-                  state="hover-looking-around"
-                  style={{ "width": 33 }}>
-                </lord-icon>
-                <span>Rahul donated <span className='font-bold'>$43</span>  with message "I support you bro. Lots of ❤️"</span>
-              </li>
-            </ul>
-          </div>
-          <Paymentpage />
-        </main>
+
+          <main className='main rounded-lg w-full h-fit lg:w-2/3 bg-purple-300 flex p-5 gap-5 flex-wrap justify-evenly'>
+
+            <div className="supporters  lg:w-1/2 w-full   ">
+              <h1 className='text-xl font-bold mb-2 '>Supporters</h1>
+              {/* list all supporters as leaderboard */}
+              <ul className='min-h-[30vh] max-h-[50vh] lg:max-h-[60vh] overflow-y-scroll no-scrollbar '>
+                <li className='flex items-start my-4 gap-2'>
+                  <lord-icon
+                    src="https://cdn.lordicon.com/hhljfoaj.json"
+                    trigger="hover"
+                    stroke="light"
+                    state="hover-looking-around"
+                    style={{ "width": 33 }}>
+                  </lord-icon>
+                  <span className='mt-1'>Subhanm donated <span className='font-bold'>₹30</span>  with message  "I support you bro. Lots of ❤️"</span>
+                </li>
+                <li className='flex items-start my-4 gap-2'>
+                  <lord-icon
+                    src="https://cdn.lordicon.com/hhljfoaj.json"
+                    trigger="hover"
+                    stroke="light"
+                    state="hover-looking-around"
+                    style={{ "width": 33 }}>
+                  </lord-icon>
+                  <span className='mt-1'>Subhanm donated <span className='font-bold'>₹30</span>  with message  "I support you bro. Lots of ❤️"</span>
+                </li>
+                <li className='flex items-start my-4 gap-2'>
+                  <lord-icon
+                    src="https://cdn.lordicon.com/hhljfoaj.json"
+                    trigger="hover"
+                    stroke="light"
+                    state="hover-looking-around"
+                    style={{ "width": 33 }}>
+                  </lord-icon>
+                  <span className='mt-1'>Subhanm donated <span className='font-bold'>₹30</span>  with message  "I support you bro. Lots of ❤️"</span>
+                </li>
+                <li className='flex items-start my-4 gap-2'>
+                  <lord-icon
+                    src="https://cdn.lordicon.com/hhljfoaj.json"
+                    trigger="hover"
+                    stroke="light"
+                    state="hover-looking-around"
+                    style={{ "width": 33 }}>
+                  </lord-icon>
+                  <span className='mt-1'>Subhanm donated <span className='font-bold'>₹30</span>  with message  "I support you bro. Lots of ❤️"</span>
+                </li>
+                <li className='flex items-start my-4 gap-2'>
+                  <lord-icon
+                    src="https://cdn.lordicon.com/hhljfoaj.json"
+                    trigger="hover"
+                    stroke="light"
+                    state="hover-looking-around"
+                    style={{ "width": 33 }}>
+                  </lord-icon>
+                  <span className='mt-1'>Subhanm donated <span className='font-bold'>₹30</span>  with message  "I support you bro. Lots of ❤️"</span>
+                </li>
+                <li className='flex items-start my-4 gap-2'>
+                  <lord-icon
+                    src="https://cdn.lordicon.com/hhljfoaj.json"
+                    trigger="hover"
+                    stroke="light"
+                    state="hover-looking-around"
+                    style={{ "width": 33 }}>
+                  </lord-icon>
+                  <span className='mt-1'>Subhanm donated <span className='font-bold'>₹30</span>  with message  "I support you bro. Lots of ❤️"</span>
+                </li>
+                <li className='flex items-start my-4 gap-2'>
+                  <lord-icon
+                    src="https://cdn.lordicon.com/hhljfoaj.json"
+                    trigger="hover"
+                    stroke="light"
+                    state="hover-looking-around"
+                    style={{ "width": 33 }}>
+                  </lord-icon>
+                  <span className='mt-1'>Subhanm donated <span className='font-bold'>₹30</span>  with message  "I support you bro. Lots of ❤️"</span>
+                </li>
+
+
+              </ul>
+            </div>
+            <Paymentpage />
+          </main>
       </div>
     )
   }

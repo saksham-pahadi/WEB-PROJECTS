@@ -56,11 +56,9 @@ const Home = () => {
   return (<>
 
 
-    <div className='md:h-fit border min-h-screen flex flex-col  md:flex-row w-full bg-gray-300  '>
+    <div className='md:h-screen overflow-hidden border min-h-screen flex flex-col  md:flex-row w-full bg-purple-300  '>
 
-      <div className='sidebar   h-auto w-auto  hidden md:flex  flex-col md:flex-row items-start  bg-purple-700'>
-
-
+      <div className='sidebar   h-screen w-auto  hidden md:flex  flex-col md:flex-row items-start  bg-green-300'>
 
 
 
@@ -68,8 +66,10 @@ const Home = () => {
 
 
 
-        <aside id="sidebar-multi-level-sidebar" className={` ${aside ? "absolute  top-39  md:static" : "absolute -translate-x-full md:translate-x-0  md:static"}  z-4 w-full  md:w-fit lg:w-64 h-fit md:h-screen transition-transform `} aria-label="Sidebar">
-          <div className="h-full px-3 py-4 text-black  bg-gray-300  ">
+
+
+        <aside id="sidebar-multi-level-sidebar" className={` ${aside ? "absolute  top-39  md:static" : "absolute -translate-x-full md:translate-x-0  md:static"}  z-4 w-full  md:w-fit lg:w-64 h-full md:h-screen transition-transform `} aria-label="Sidebar">
+          <div className="h-screen px-3 py-4 text-black  bg-gray-300  ">
 
             <ul className="flex flex-col  space-y-2 font-medium">
               <div className="logo hidden lg:block  h-15 mb-3">
@@ -561,7 +561,7 @@ const Home = () => {
 
 
     {/* Bottom Navigation  */}
-    <div className='md:hidden absolute bottom-0 w-full bg-red-200'>
+    <div className='md:hidden fixed bottom-0 w-full bg-red-200'>
       <BottomNavigation value={value} onChange={handleChange}>
         <BottomNavigationAction
           label="Recents"

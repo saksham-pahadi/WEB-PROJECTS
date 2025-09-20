@@ -5,12 +5,25 @@ export async function GET(req) {
   const orderId = searchParams.get("orderId");
 
   try {
+    const isProd = process.env.CASHFREE_ENV === "prod";
+
+    const BASE_URL = isProd
+    ? process.env.CF_API_BASE_PROD
+    : process.env.CF_API_BASE_TEST
+
+    const APP_ID = isProd
+      ? process.env.CASHFREE_APP_ID_PROD
+      : process.env.CASHFREE_APP_ID_TEST;
+
+    const SECRET_KEY = isProd
+      ? process.env.CASHFREE_SECRET_KEY_PROD
+      : process.env.CASHFREE_SECRET_KEY_TEST;
     const res = await fetch(
-      `https://sandbox.cashfree.com/pg/orders/${orderId}`,
+      `${BASE_URL}/orders/${orderId}`,
       {
         headers: {
-          "x-client-id": process.env.CASHFREE_APP_ID,
-          "x-client-secret": process.env.CASHFREE_SECRET_KEY,
+          "x-client-id": APP_ID,
+          "x-client-secret": SECRET_KEY,
           "x-api-version": "2022-09-01",
         },
       }
