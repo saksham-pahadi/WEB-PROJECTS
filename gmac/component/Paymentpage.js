@@ -102,7 +102,7 @@ const Paymentpage = ({ username }) => {
                 redirect: "follow"
             };
 
-            const createResp = await fetch("http://localhost:3000/api/create-order", requestOptions);
+            const createResp = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/create-order`, requestOptions);
 
             
             const createJson = await createResp.json();
