@@ -4,7 +4,7 @@
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen?logo=github)
 # Projects on vercel
 
-- # [GMAC - Social and Crowdfunding Platform](https://gmac-three.vercel.app/)
+- # [GMAC - Social and Crowdfunding Platform (Onworking)] (https://gmac-three.vercel.app/)
 - # [LinkTree Clone](https://web-projects-psi-henna.vercel.app/)
 - # [Grammy Store](https://grammy-store.vercel.app/)
 - # [React Password Manager](https://web-development-series-tedx.vercel.app)
