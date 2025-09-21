@@ -14,7 +14,7 @@ export default function PaymentResult() {
 
     async function checkStatus() {
       try {
-        const res = await fetch(`http://localhost:3000/api/verify-order?order_id=${orderId}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/verify-order?order_id=${orderId}`);
         const data = await res.json();
 
         if (!res.ok) {
