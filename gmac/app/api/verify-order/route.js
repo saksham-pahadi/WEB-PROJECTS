@@ -1,4 +1,3 @@
-// app/api/verify-order/route.js
 import { NextResponse } from "next/server";
 import { getCashfreeConfig } from "@/lib/cashfree";
 
@@ -8,11 +7,14 @@ export async function GET(req) {
     const orderId = searchParams.get("order_id");
 
     if (!orderId) {
-      return NextResponse.json({ error: "order_id required" }, { status: 400 });
+      console.warn("No order_id provided, redirecting to Home");
+      return NextResponse.redirect(new URL("/", req.url));
     }
 
     const { baseUrl, appId, secretKey, env } = getCashfreeConfig();
     console.log(`🔍 Verifying order in ${env} environment`, orderId);
+    console.log(`${baseUrl}/orders/${encodeURIComponent(orderId)}`);
+
 
     const res = await fetch(`${baseUrl}/orders/${encodeURIComponent(orderId)}`, {
       method: "GET",
@@ -24,16 +26,23 @@ export async function GET(req) {
       },
     });
 
-    const data = await res.json();
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      const text = await res.text();
+      console.error("❌ Cashfree did not return JSON:", text);
+      return NextResponse.redirect(new URL("/", req.url));
+    }
 
     if (!res.ok) {
       console.error("❌ Cashfree verify error:", data);
-      return NextResponse.json({ error: "failed to fetch order", details: data }, { status: res.status });
+      return NextResponse.redirect(new URL("/", req.url));
     }
 
     return NextResponse.json(data);
   } catch (err) {
     console.error("❌ Server error:", err);
-    return NextResponse.json({ error: "server error", details: String(err) }, { status: 500 });
+    return NextResponse.redirect(new URL("/", req.url));
   }
 }
