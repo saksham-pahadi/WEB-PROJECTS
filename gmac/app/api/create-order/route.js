@@ -40,6 +40,7 @@ export async function POST(req) {
 
     console.log("🌀 Cashfree Env:", isProd ? "PROD" : "TEST");
     console.log("🌀 Return URL:", returnUrl);
+    console.log("🌀 BASE URL:", BASE_URL);
 
     const res = await fetch(`${BASE_URL}/orders`, {
       method: "POST",
