@@ -16,16 +16,13 @@ const Paymentpage = ({ username }) => {
     //   const [loading, setLoading] = useState(false);
     const isProd = process.env.NEXT_PUBLIC_CASHFREE_ENV === "prod";
 
-    const ApiBase = isProd
-    ? "https://sdk.cashfree.com/js/v3/cashfree.js"
-    : process.env.CF_API_BASE
+    
 
     async function loadCashfreeSdk() {
         if (window.Cashfree) return window.Cashfree;
         return new Promise((resolve, reject) => {
             const s = document.createElement("script");
             s.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
-            // s.src = ApiBase;
             s.onload = () => resolve(window.Cashfree);
             s.onerror = reject;
             document.head.appendChild(s);
@@ -104,7 +101,8 @@ const Paymentpage = ({ username }) => {
 
             // begin checkout
             const result = await cashfree.checkout({
-                paymentSessionId
+                paymentSessionId,
+                returnUrl,
             });
 
             if (result?.error) {
