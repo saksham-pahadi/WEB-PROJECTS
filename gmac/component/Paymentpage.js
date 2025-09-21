@@ -11,7 +11,6 @@ const Paymentpage = ({ username }) => {
     const [msg, setMsg] = useState("");
     const { data: session } = useSession()
     const [paymentform, setpaymentform] = useState({ amount: '100', message: 'A little support from your fan!' })
-    const [amount, setAmount] = useState("100"); // sample
 
     //   const [loading, setLoading] = useState(false);
     const isProd = process.env.NEXT_PUBLIC_CASHFREE_ENV === "prod";
@@ -32,8 +31,6 @@ const Paymentpage = ({ username }) => {
     const handleChange = (e) => {
         console.log(e.target)
         setpaymentform({ ...paymentform, [e.target.name]: e.target.value })
-        console.log(paymentform)
-        setAmount(paymentform.amount)
 
     }
 
@@ -54,7 +51,6 @@ const Paymentpage = ({ username }) => {
 
             const raw = JSON.stringify({
                 "amount": paymentform.amount,
-                "orderId": "orderId",
                 "customer": {
                     "id": "cust_101",
                     "email": session.user.email,
@@ -97,12 +93,12 @@ const Paymentpage = ({ username }) => {
             const cashfree = Cashfree({ mode: isProd ? "production" : "sandbox" });
 
             // configure return URL; server used NEXT_PUBLIC_BASE_URL with placeholder {order_id}
-            const returnUrl = `${window.location.origin}/payment/result?order_id={order_id}`;
+            const returnUrl = `${window.location.origin}/payment/result?order_id=${createJson.order_id}`;
 
             // begin checkout
             const result = await cashfree.checkout({
                 paymentSessionId,
-                returnUrl,
+                // returnUrl,
             });
 
             if (result?.error) {

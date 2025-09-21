@@ -54,7 +54,7 @@ export async function POST(req) {
     });
 
     const data = await res.json();
-    console.log(data)
+    console.log("Data",data)
 
     if (!res.ok) {
       console.error("❌ Cashfree error:", data);
