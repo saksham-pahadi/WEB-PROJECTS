@@ -14,13 +14,18 @@ const Paymentpage = ({ username }) => {
     const [amount, setAmount] = useState("100"); // sample
 
     //   const [loading, setLoading] = useState(false);
+    const isProd = process.env.CASHFREE_ENV === "prod";
+
+    const ApiBase = isProd
+    ? "https://sdk.cashfree.com/js/v3/cashfree.js"
+    : process.env.CF_API_BASE
 
     async function loadCashfreeSdk() {
         if (window.Cashfree) return window.Cashfree;
         return new Promise((resolve, reject) => {
             const s = document.createElement("script");
             // s.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
-            s.src = process.env.CF_API_BASE;
+            s.src = ApiBase;
             s.onload = () => resolve(window.Cashfree);
             s.onerror = reject;
             document.head.appendChild(s);
