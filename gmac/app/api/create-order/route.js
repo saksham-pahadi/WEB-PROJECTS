@@ -21,8 +21,8 @@ export async function POST(req) {
 
     // Build return URL safely (avoid double slashes)
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/+$/, "");
-    const returnUrl = `${baseUrl}/payment/result?order_id={order_id}`;
     const order_Id=`order_${Date.now()}`
+    const returnUrl = `${baseUrl}/payment/result?order_id=${order_Id}`;
 
     const payload = {
       order_amount: body.amount,
@@ -34,7 +34,7 @@ export async function POST(req) {
         customer_phone: body.customer.phone,
       },
       order_meta: {
-        return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/result?order_id=${order_Id}`,
+        return_url: returnUrl,
       },
     };
 

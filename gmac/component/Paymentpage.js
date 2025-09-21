@@ -24,8 +24,8 @@ const Paymentpage = ({ username }) => {
         if (window.Cashfree) return window.Cashfree;
         return new Promise((resolve, reject) => {
             const s = document.createElement("script");
-            // s.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
-            s.src = ApiBase;
+            s.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
+            // s.src = ApiBase;
             s.onload = () => resolve(window.Cashfree);
             s.onerror = reject;
             document.head.appendChild(s);
@@ -41,41 +41,6 @@ const Paymentpage = ({ username }) => {
     }
 
 
-    // const handlePayment = async (amount, receiver) => {
-    //     setLoading(true);
-    //     const res = await fetch("/api/razorpay", {
-    //         method: "POST",
-    //         headers: { "Content-Type": "application/json" },
-    //         body: JSON.stringify({ amount }), // 👈 send amount to server
-    //     });
-    //     const data = await res.json();
-    //     console.log(amount)
-
-    //     if (!data.orderId) {
-    //         alert("Failed to create order");
-    //         setLoading(false);
-    //         return;
-    //     }
-
-
-    //     const options = {
-    //         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-    //         amount: amount * 100,
-    //         currency: "INR",
-    //         name: `Get Me A Chai - ${receiver}`,
-    //         description: "Test Transaction",
-    //         order_id: data.orderId,
-    //         handler: function (response) {
-    //             // alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
-    //             toast.success("Payment successful! ");
-    //         },
-    //         theme: { color: "#1d293d" },
-    //     };
-
-    //     const rzp = new window.Razorpay(options);
-    //     rzp.open();
-    //     setLoading(false);
-    // };
 
 
     async function handlePay(e) {
