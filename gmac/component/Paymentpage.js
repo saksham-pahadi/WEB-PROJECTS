@@ -14,7 +14,7 @@ const Paymentpage = ({ username }) => {
     const [amount, setAmount] = useState("100"); // sample
 
     //   const [loading, setLoading] = useState(false);
-    const isProd = process.env.CASHFREE_ENV === "prod";
+    const isProd = process.env.NEXT_PUBLIC_CASHFREE_ENV === "prod";
 
     const ApiBase = isProd
     ? "https://sdk.cashfree.com/js/v3/cashfree.js"
@@ -97,7 +97,7 @@ const Paymentpage = ({ username }) => {
             // load SDK
             const Cashfree = await loadCashfreeSdk();
             // initialize Cashfree client in production mode
-            const cashfree = Cashfree({ mode: process.env.CASHFREE_ENV === "prod" ? "production" : "sandbox" });
+            const cashfree = Cashfree({ mode: isProd ? "production" : "sandbox" });
 
             // configure return URL; server used NEXT_PUBLIC_BASE_URL with placeholder {order_id}
             const returnUrl = `${window.location.origin}/payment/result?order_id={order_id}`;
