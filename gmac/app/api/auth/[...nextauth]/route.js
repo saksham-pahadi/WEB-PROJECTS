@@ -55,19 +55,16 @@ export const authoptions = NextAuth({
                 if (!currentUser) {
                     currentUser = await User.create({
                         email: user.email,
-                        fullname: user.name || user.email.split("@")[0],
+                        name: user.name || user.email.split("@")[0],
+                        username: user.email.split("@")[0],
+                        profilepic: null,
                         remember: false,
-                        profilepic: user.image,
-                        provider: "google"
+                        provider: "google",
+                        dob:null,
+                        bio:null,
+                        links:[],
+                        password:null,
                     })
-                }
-                if (currentUser) {
-                    let PFP = await currentUser.profilepic
-                    if (PFP === null) {
-                        currentUser.profilepic = user.image;
-                        await currentUser.save();
-                    }
-
                 }
                 return true
             }
@@ -77,10 +74,15 @@ export const authoptions = NextAuth({
                 if (!currentUser) {
                     currentUser = await User.create({
                         email: user.email,
-                        fullname: user.name || user.email.split("@")[0],
+                        name: user.name || user.email.split("@")[0],
+                        username: user.email.split("@")[0],
                         profilepic: user.image,
                         remember: false,
-                        provider: "github"
+                        provider: "github",
+                        dob:null,
+                        bio:null,
+                        links:[],
+                        password:null,
                     })
                 }
                 if (currentUser) {
@@ -114,6 +116,7 @@ export const authoptions = NextAuth({
             return token
         },
         async session({ session, token }) {
+            await connectDB()
             let dbUser
             if(session){
 

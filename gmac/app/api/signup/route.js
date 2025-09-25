@@ -55,9 +55,11 @@ export async function POST(req) {
             dob,
             password: hashpass,
             username: email.split("@")[0],
-            profilepic:null,
+            profilepic: null,
             role: "user",
             remember: false,
+            bio: null,
+            links: [],
             provider: "Credentials"
         })
 

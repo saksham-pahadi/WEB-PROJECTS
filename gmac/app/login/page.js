@@ -83,24 +83,7 @@ const Login = () => {
 
 
 
-    //     if (form.otp === "") {
-    //         toast.error("Please enter OTP")
-    //         return;
-    //     }
-    //     if (form.otp != GivenOtp) {
-    //         toast.error("Please enter valid OTP")
-    //         return;
-    //     }
-
-
-
-
-
-    //     await signIn("credentials", {
-    //         email: form.email.toLowerCase(),
-    //         callbackUrl: "/"
-    //     });
-    // };
+    
     const handleLogin = async () => {
         if (!form.password) return toast.error("Enter Password")
 
@@ -141,7 +124,7 @@ const Login = () => {
             })
 
             const result = await res.json()
-            if (!res.ok) throw new Error(result.error || "Signup failed")
+            if (!result.ok) throw new Error(result.error || "Signup failed")
 
             toast.success("Signup successful! Please login.")
             setForm({ email: "", otp: "", fullname: "", dob: "", remember: false })
@@ -197,6 +180,7 @@ const Login = () => {
                         onChange={handleChange}
                         type="email"
                         placeholder="Email"
+                        autoComplete="email"
                         className="w-full p-2 border rounded-lg mt-3"
                     />
                     {!signUpMode && <div className="relative mt-3">

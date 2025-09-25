@@ -141,9 +141,11 @@ const Paymentpage = ({ username }) => {
             <Script src="https://checkout.razorpay.com/v1/checkout.js">
             </Script>
             <div className="makepayment mb-5 md:mb-0 ">
-                <h1 className='text-2xl font-bold mb-3'>Support {session.user.name}</h1>
+                <h1 className='text-2xl text-purple-700 font-bold mb-3'>Support {session.user.name}</h1>
+                <div className='saperator bg-gray-400 w-full my-1 h-[1px]'></div>
 
-                <input onChange={handleChange} value={paymentform?.amount || ""} name="amount" type='number' className='w-full p-3 rounded-lg bg-white border-2 remove-arrow' placeholder='Enter Amount' onKeyDown={(evt) => (evt.key === '.' || evt.key === '-' || evt.key === '+' || evt.key === 'e' || evt.key === 'E') && evt.preventDefault()} />
+
+                <input onChange={handleChange} value={paymentform?.amount || ""} name="amount" type='number' className='w-full p-3 rounded-lg bg-white border-2 remove-arrow mt-5' placeholder='Enter Amount' onKeyDown={(evt) => (evt.key === '.' || evt.key === '-' || evt.key === '+' || evt.key === 'e' || evt.key === 'E') && evt.preventDefault()} />
 
 
                 {/* or choose from these Amount */}

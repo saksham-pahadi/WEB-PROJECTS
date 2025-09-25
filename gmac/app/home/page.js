@@ -1,6 +1,6 @@
 "use client"
 // import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { useSession, signIn, signOut } from "next-auth/react"
@@ -27,8 +27,16 @@ import ExploreRoundedIcon from '@mui/icons-material/ExploreRounded';
 import TipsAndUpdatesTwoToneIcon from '@mui/icons-material/TipsAndUpdatesTwoTone';
 import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
+import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
+import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import AddToPhotosRoundedIcon from '@mui/icons-material/AddToPhotosRounded';
 import ListRoundedIcon from '@mui/icons-material/ListRounded';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import AssistantRoundedIcon from '@mui/icons-material/AssistantRounded';
+import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
+import BookmarkRoundedIcon from '@mui/icons-material/BookmarkRounded';
+import { InputBase } from "@mui/material";
 
 const Home = () => {
   const [value, setValue] = useState('recents');
@@ -40,6 +48,9 @@ const Home = () => {
   const [mystuff, setmystuff] = useState(false)
   const [pannel, setpannel] = useState("Home")
 
+  const [picture, setpicture] = useState(null)
+  const [USER, setUSER] = useState({})
+
   const [sideOptions, setsideOptions] = useState({ Home: true, Search: false, Explore: false, Projects: false, Message: false, Notification: false, Create: false, Profile: false, More: false })
 
 
@@ -47,6 +58,25 @@ const Home = () => {
   if (!session) {
     redirect("/login")
   }
+
+  useEffect(() => {
+
+    const getuser = async () => {
+
+      const UserData = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/fetchuser/${session.user.email}`)
+      const User = await UserData.json()
+      setUSER(User.getuser[0])
+      setpicture(User.getuser[0].profilepic)
+
+
+
+      return User.getuser[0];
+
+    }
+
+    getuser()
+
+  }, [])
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -56,7 +86,8 @@ const Home = () => {
   return (<>
 
 
-    <div className='md:h-screen overflow-hidden border min-h-screen flex flex-col  md:flex-row w-full bg-purple-300  '>
+
+    <div className='md:h-screen font-sans  min-h-screen flex flex-col  md:flex-row w-full bg-purple-300  '>
 
       <div className='sidebar   h-screen w-auto  hidden md:flex  flex-col md:flex-row items-start  bg-green-300'>
 
@@ -87,7 +118,7 @@ const Home = () => {
 
 
               <div className="flex items-center justify-center lg:justify-start lg:p-2 text-gray-900 rounded-lg  cursor-default">
-                <img src={`${session.user.image}`} className='h-10 border border-black rounded-full p-[2px]' alt="" />
+                {session.user.image ? <img className='h-10 w-10 rounded-full' src={`${picture}`} alt="" /> : <div className='h-10 w-10 lg:h-[15%] lg:w-[15%]  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
                 <span className="ms-3 hidden font-bold lg:flex">{session.user.name}</span>
               </div>
               <div className='bg-gray-200 h-[1px]'>
@@ -178,42 +209,115 @@ const Home = () => {
 
 
 
-        {pannel == "Home" && <div className=" flex h-screen ">
+
+
+
+
+
+
+
+
+
+
+        {pannel == "Home" && <div className=" flex h-screen overflow-scroll no-scrollbar ">
 
           <div className='left w-full lg:w-2/3 border-r border-gray-400  min-h-screen overflow-y-scroll no-scrollbar'>
 
 
-            <div className='sticky h-10 bg-purple-600 top-0 w-full text-white flex items-center justify-center'>
-              <p className='font-bold'>Following</p>
+            <div className='sticky md:hidden h-15 bg-purple-50 top-0 w-full text-white flex items-center justify-between px-5 border-b-[1px] border-gray-400 z-10'>
+              <div className="logo text-[#6a1b9a] font-bold text-3xl font-sans w-1/2">GMAC</div>
+              <div className="SearchNotification flex items-center gap-3 text-3xl w-50">
+                <div className="w-full flex justify-center px-3">
+                  <div
+                    className="flex items-center w-full max-w-md bg-white rounded-full shadow-md px-3 py-2 
+                   focus-within:ring-2 focus-within:ring-purple-500"
+                  >
+                    <SearchRoundedIcon
+                      sx={{ color: "#6a1b9a", fontSize: "1.4rem" }}
+                      className="mr-2"
+                    />
+                    <InputBase
+                      placeholder="Search..."
+                      sx={{
+                        flex: 1,
+                        fontSize: {
+                          xs: "0.85rem", // small on mobile
+                          sm: "0.95rem", // slightly bigger on tablet
+                          md: "1rem",    // normal on desktop
+                        },
+                      }}
+                      className="text-gray-700 w-full"
+                    />
+                  </div>
+                </div>
+                <FavoriteBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
+
+              </div>
             </div>
 
-            <div className="posts sm:px-5 h-fit">
+          {!USER.password && <div className='fixed md:hidden h-15 bg-purple-50 top-15 w-full text-black flex items-center justify-start px-5 border-b-[1px] border-gray-400 z-10 cursor-default'>
+              <span className='text-red-500'>*</span>Please set a password to secure your account. <div onClick={() => { setsideOptions({ Home: false, Search: false, Explore: false, Projects: false, Message: false, Notification: false, Create: false, Profile: true, More: false }), setpannel("Profile") }} className='underline cursor-pointer'>Set Password</div>
+            </div>}
 
-              <div className="post  bg-gray-400 h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
-                <div className='h-13 px-2 flex items-center justify-between bg-gray-300'>
+
+            <div className="posts sm:px-5 h-fit mb-15 md:mb-0">
+
+              <div className="post   h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
+                <div className='h-13 px-2 flex items-center justify-between border-b-[1px] border-gray-200'>
                   <div className='flex  gap-2 items-center'>
-                    <img className='h-10 rounded-full' src={`${session.user.image}`} alt="" />
-                    <p>shxm</p>
-                    <p>.2D</p>
+                    {session.user.image ? <img className='h-7 md:h-10 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-10 w-10  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
+                    <p className='text-sm font-semibold md:text-xl'>{USER.username}<span className='text-purple-500 text-sm md:text-lg'> .2D</span> </p>
                   </div>
-                  <div>
-                    Options
+                  <div className='text-3xl'>
+                    <MoreHorizIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
                   </div>
 
                 </div>
-                <img className='h-fit w-full' src={`${session.user.image}`} alt="" />
-                <div className='h-fit px-1 flex items-center justify-between bg-gray-300'>
+                <img className='h-fit w-full' src={`https://static01.nyt.com/images/2018/03/08/business/08STATE-tear/07STATE-tear-articleLarge.jpg?quality=75&auto=webp&disable=upscale`} alt="" />
+                <div className='h-fit px-1 flex items-center justify-between '>
                   <div className='flex gap-2'>
-                    <button type='button'>Like</button>
-                    <button type='button'>Comment</button>
-                    <button type='button'>Share</button>
+                    <button className='text-3xl' type='button'><FavoriteTwoToneIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    <button className='text-3xl' type='button'><AssistantRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    <button className='text-3xl' type='button'><SendRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
                   </div>
                   <div>
-                    <button type='button'>Save</button>
+                    <button className='text-3xl' type='button'><BookmarkBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
                   </div>
                 </div>
-                <div className='h-fit px-1 bg-gray-300'>
-                  <p>shxm</p>
+                <div className='h-fit px-1 '>
+                  <p className='font-semibold'>{USER.username}</p>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore alias repudiandae deserunt delectus cum et eveniet vel, ea eum maiores ullam quidem nisi temporibus aliquam in molestias quo sint veritatis.</p>
+                  <p>Comments</p>
+                </div>
+
+              </div>
+
+              <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
+              
+              <div className="post   h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
+                <div className='h-13 px-2 flex items-center justify-between border-b-[1px] border-gray-200'>
+                  <div className='flex  gap-2 items-center'>
+                    {session.user.image ? <img className='h-7 md:h-10 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-10 w-10  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
+                    <p className='text-sm font-semibold md:text-xl'>{USER.username}<span className='text-purple-500 text-sm md:text-lg'> .2D</span> </p>
+                  </div>
+                  <div className='text-3xl'>
+                    <MoreHorizIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
+                  </div>
+
+                </div>
+                <img className='h-fit w-full' src={`https://media.licdn.com/dms/image/v2/D4D12AQGVw0sVZ7Kj-g/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1673636348357?e=2147483647&v=beta&t=PSpU4mZFpMBmE14oWDnDwf5a8_4rdQUiCUKF_U-x584`} alt="" />
+                <div className='h-fit px-1 flex items-center justify-between '>
+                  <div className='flex gap-2'>
+                    <button className='text-3xl' type='button'><FavoriteTwoToneIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    <button className='text-3xl' type='button'><AssistantRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    <button className='text-3xl' type='button'><SendRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                  </div>
+                  <div>
+                    <button className='text-3xl' type='button'><BookmarkBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                  </div>
+                </div>
+                <div className='h-fit px-1 '>
+                  <p className='font-semibold'>{USER.username}</p>
                   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore alias repudiandae deserunt delectus cum et eveniet vel, ea eum maiores ullam quidem nisi temporibus aliquam in molestias quo sint veritatis.</p>
                   <p>Comments</p>
                 </div>
@@ -222,31 +326,30 @@ const Home = () => {
 
               <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
 
-              <div className="post  bg-gray-400 h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
-                <div className='h-13 px-2 flex items-center justify-between bg-gray-300'>
+              <div className="post   h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
+                <div className='h-13 px-2 flex items-center justify-between border-b-[1px] border-gray-200'>
                   <div className='flex  gap-2 items-center'>
-                    <img className='h-10 rounded-full' src={`${session.user.image}`} alt="" />
-                    <p>shxm</p>
-                    <p>.2D</p>
+                    {session.user.image ? <img className='h-7 md:h-10 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-10 w-10  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
+                    <p className='text-sm font-semibold md:text-xl'>{USER.username}<span className='text-purple-500 text-sm md:text-lg'> .2D</span> </p>
                   </div>
-                  <div>
-                    Options
+                  <div className='text-3xl'>
+                    <MoreHorizIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
                   </div>
 
                 </div>
-                <img className='h-fit w-full' src={`${session.user.image}`} alt="" />
-                <div className='h-fit px-1 flex items-center justify-between bg-gray-300'>
+                <img className='h-fit w-full' src={`https://www.seoclerk.com/pics/001/142/576/a94e357058c0eee661a72e38111b87d8.jpg`} alt="" />
+                <div className='h-fit px-1 flex items-center justify-between '>
                   <div className='flex gap-2'>
-                    <button type='button'>Like</button>
-                    <button type='button'>Comment</button>
-                    <button type='button'>Share</button>
+                    <button className='text-3xl' type='button'><FavoriteTwoToneIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    <button className='text-3xl' type='button'><AssistantRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    <button className='text-3xl' type='button'><SendRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
                   </div>
                   <div>
-                    <button type='button'>Save</button>
+                    <button className='text-3xl' type='button'><BookmarkBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
                   </div>
                 </div>
-                <div className='h-fit px-1 bg-gray-300'>
-                  <p>shxm</p>
+                <div className='h-fit px-1 '>
+                  <p className='font-semibold'>{USER.username}</p>
                   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore alias repudiandae deserunt delectus cum et eveniet vel, ea eum maiores ullam quidem nisi temporibus aliquam in molestias quo sint veritatis.</p>
                   <p>Comments</p>
                 </div>
@@ -255,31 +358,30 @@ const Home = () => {
 
               <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
 
-              <div className="post  bg-gray-400 h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
-                <div className='h-13 px-2 flex items-center justify-between bg-gray-300'>
+              <div className="post   h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
+                <div className='h-13 px-2 flex items-center justify-between border-b-[1px] border-gray-200'>
                   <div className='flex  gap-2 items-center'>
-                    <img className='h-10 rounded-full' src={`${session.user.image}`} alt="" />
-                    <p>shxm</p>
-                    <p>.2D</p>
+                    {session.user.image ? <img className='h-7 md:h-10 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-10 w-10  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
+                    <p className='text-sm font-semibold md:text-xl'>{USER.username}<span className='text-purple-500 text-sm md:text-lg'> .2D</span> </p>
                   </div>
-                  <div>
-                    Options
+                  <div className='text-3xl'>
+                    <MoreHorizIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
                   </div>
 
                 </div>
-                <img className='h-fit w-full' src={`${session.user.image}`} alt="" />
-                <div className='h-fit px-1 flex items-center justify-between bg-gray-300'>
+                <img className='h-fit w-full' src={`https://mp.moonpreneur.com/blog/wp-content/uploads/2024/11/the-value-of-computerscience-education.webp`} alt="" />
+                <div className='h-fit px-1 flex items-center justify-between '>
                   <div className='flex gap-2'>
-                    <button type='button'>Like</button>
-                    <button type='button'>Comment</button>
-                    <button type='button'>Share</button>
+                    <button className='text-3xl' type='button'><FavoriteTwoToneIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    <button className='text-3xl' type='button'><AssistantRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    <button className='text-3xl' type='button'><SendRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
                   </div>
                   <div>
-                    <button type='button'>Save</button>
+                    <button className='text-3xl' type='button'><BookmarkBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
                   </div>
                 </div>
-                <div className='h-fit px-1 bg-gray-300'>
-                  <p>shxm</p>
+                <div className='h-fit px-1 '>
+                  <p className='font-semibold'>{USER.username}</p>
                   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore alias repudiandae deserunt delectus cum et eveniet vel, ea eum maiores ullam quidem nisi temporibus aliquam in molestias quo sint veritatis.</p>
                   <p>Comments</p>
                 </div>
@@ -288,31 +390,30 @@ const Home = () => {
 
               <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
 
-              <div className="post  bg-gray-400 h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
-                <div className='h-13 px-2 flex items-center justify-between bg-gray-300'>
+              <div className="post   h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
+                <div className='h-13 px-2 flex items-center justify-between border-b-[1px] border-gray-200'>
                   <div className='flex  gap-2 items-center'>
-                    <img className='h-10 rounded-full' src={`${session.user.image}`} alt="" />
-                    <p>shxm</p>
-                    <p>.2D</p>
+                    {session.user.image ? <img className='h-7 md:h-10 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-10 w-10  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
+                    <p className='text-sm font-semibold md:text-xl'>{USER.username}<span className='text-purple-500 text-sm md:text-lg'> .2D</span> </p>
                   </div>
-                  <div>
-                    Options
+                  <div className='text-3xl'>
+                    <MoreHorizIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
                   </div>
 
                 </div>
-                <img className='h-fit w-full' src={`${session.user.image}`} alt="" />
-                <div className='h-fit px-1 flex items-center justify-between bg-gray-300'>
+                <img className='h-fit w-full' src={`https://ninadinh.wordpress.com/wp-content/uploads/2016/11/umd_cs_infographic_2015-page-001.jpg?w=656`} alt="" />
+                <div className='h-fit px-1 flex items-center justify-between '>
                   <div className='flex gap-2'>
-                    <button type='button'>Like</button>
-                    <button type='button'>Comment</button>
-                    <button type='button'>Share</button>
+                    <button className='text-3xl' type='button'><FavoriteTwoToneIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    <button className='text-3xl' type='button'><AssistantRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    <button className='text-3xl' type='button'><SendRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
                   </div>
                   <div>
-                    <button type='button'>Save</button>
+                    <button className='text-3xl' type='button'><BookmarkBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
                   </div>
                 </div>
-                <div className='h-fit px-1 bg-gray-300'>
-                  <p>shxm</p>
+                <div className='h-fit px-1 '>
+                  <p className='font-semibold'>{USER.username}</p>
                   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore alias repudiandae deserunt delectus cum et eveniet vel, ea eum maiores ullam quidem nisi temporibus aliquam in molestias quo sint veritatis.</p>
                   <p>Comments</p>
                 </div>
@@ -321,31 +422,30 @@ const Home = () => {
 
               <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
 
-              <div className="post  bg-gray-400 h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
-                <div className='h-13 px-2 flex items-center justify-between bg-gray-300'>
-                  <div className='flex  gap-2 items-center'>
-                    <img className='h-10 rounded-full' src={`${session.user.image}`} alt="" />
-                    <p>shxm</p>
-                    <p>.2D</p>
+              <div className="post   h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
+                <div className='h-13 px-2 flex items-center justify-between border-b-[1px] border-gray-200 '>
+                  <div className='flex  gap-2 items-center '>
+                    {session.user.image ? <img className='h-7 md:h-10 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-10 w-10  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
+                    <p className='text-sm font-semibold md:text-xl'>{USER.username}<span className='text-purple-500 text-sm md:text-lg'> .2D</span> </p>
                   </div>
-                  <div>
-                    Options
+                  <div className='text-3xl'>
+                    <MoreHorizIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
                   </div>
 
                 </div>
-                <img className='h-fit w-full' src={`${session.user.image}`} alt="" />
-                <div className='h-fit px-1 flex items-center justify-between bg-gray-300'>
+                <img className='h-fit w-full' src={`https://pbs.twimg.com/amplify_video_thumb/1953440008309768193/img/jfORB9CCqgHRtKLI.jpg:large`} alt="" />
+                <div className='h-fit px-1 flex items-center justify-between '>
                   <div className='flex gap-2'>
-                    <button type='button'>Like</button>
-                    <button type='button'>Comment</button>
-                    <button type='button'>Share</button>
+                    <button className='text-3xl' type='button'><FavoriteTwoToneIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    <button className='text-3xl' type='button'><AssistantRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    <button className='text-3xl' type='button'><SendRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
                   </div>
                   <div>
-                    <button type='button'>Save</button>
+                    <button className='text-3xl' type='button'><BookmarkBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
                   </div>
                 </div>
-                <div className='h-fit px-1 bg-gray-300'>
-                  <p>shxm</p>
+                <div className='h-fit px-1 '>
+                  <p className='font-semibold'>{USER.username}</p>
                   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore alias repudiandae deserunt delectus cum et eveniet vel, ea eum maiores ullam quidem nisi temporibus aliquam in molestias quo sint veritatis.</p>
                   <p>Comments</p>
                 </div>
@@ -355,7 +455,6 @@ const Home = () => {
               <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
 
 
-              <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
 
 
 
@@ -376,7 +475,7 @@ const Home = () => {
 
             <div className='px-5 mt-2 flex items-center justify-between '>
               <div className='flex items-center justify-start gap-2'>
-                <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" />
+                {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
                 <div>
                   <p className='font-bold'>shxm</p>
                   <p>Saksham Kushwaha</p>
@@ -399,7 +498,8 @@ const Home = () => {
 
               <div className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl justify-between '>
                 <div className='flex items-center justify-start gap-2'>
-                  <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" />
+                  {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
+
                   <div>
                     <p className='font-bold'>shxm</p>
                     <p>Saksham Kushwaha</p>
@@ -411,7 +511,7 @@ const Home = () => {
 
               <div className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl justify-between '>
                 <div className='flex items-center justify-start gap-2'>
-                  <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" />
+                  {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
                   <div>
                     <p className='font-bold'>shxm</p>
                     <p>Saksham Kushwaha</p>
@@ -423,7 +523,7 @@ const Home = () => {
 
               <div className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl justify-between '>
                 <div className='flex items-center justify-start gap-2'>
-                  <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" />
+                  {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
                   <div>
                     <p className='font-bold'>shxm</p>
                     <p>Saksham Kushwaha</p>
@@ -435,7 +535,7 @@ const Home = () => {
 
               <div className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl justify-between '>
                 <div className='flex items-center justify-start gap-2'>
-                  <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" />
+                  {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
                   <div>
                     <p className='font-bold'>shxm</p>
                     <p>Saksham Kushwaha</p>
@@ -447,7 +547,7 @@ const Home = () => {
 
               <div className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl justify-between '>
                 <div className='flex items-center justify-start gap-2'>
-                  <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" />
+                  {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
                   <div>
                     <p className='font-bold'>shxm</p>
                     <p>Saksham Kushwaha</p>
@@ -459,7 +559,7 @@ const Home = () => {
 
               <div className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl justify-between '>
                 <div className='flex items-center justify-start gap-2'>
-                  <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" />
+                  {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
                   <div>
                     <p className='font-bold'>shxm</p>
                     <p>Saksham Kushwaha</p>
@@ -469,7 +569,7 @@ const Home = () => {
                 <button type='button'>Follow</button>
               </div>
 
- 
+
 
 
 
@@ -492,12 +592,13 @@ const Home = () => {
 
         </div>}
 
-        {pannel == "Profile" && <div className="p-4  ">
-          <Profile />
+        {pannel == "Profile" && <div className="   h-screen overflow-scroll no-scrollbar ">
+          <Profile
+            Username={USER} />
 
         </div>}
 
-        {pannel == "Projects" && <div className="p-4  ">
+        {pannel == "Projects" && <div className="p-4">
           <Projects />
 
         </div>}
@@ -520,6 +621,7 @@ const Home = () => {
 
         {pannel == "More" && <div className="p-4  ">
           More
+          <button className='m-2 p-2 rounded-lg bg-red-200' onClick={() => { signOut() }}>Logout</button>
 
         </div>}
 
@@ -561,7 +663,7 @@ const Home = () => {
 
 
     {/* Bottom Navigation  */}
-    <div className='md:hidden fixed bottom-0 w-full bg-red-200'>
+    {/* <div className='md:hidden fixed bottom-0 w-full bg-red-200'>
       <BottomNavigation value={value} onChange={handleChange}>
         <BottomNavigationAction
           label="Recents"
@@ -591,7 +693,258 @@ const Home = () => {
         <BottomNavigationAction label="Folder" value="folder" icon={<FolderIcon />} />
       </BottomNavigation>
 
+    </div> */}
+
+
+
+    {/* <div className="md:hidden fixed bottom-0 w-full bg-red-200">
+  <BottomNavigation
+    value={value}
+    onChange={handleChange}
+    sx={{
+      display: "flex",
+    }}
+  >
+    <BottomNavigationAction
+      label="Recents"
+      value="recents"
+      icon={<RestoreIcon />}
+      sx={{ flex: 1, minWidth: 0 }}
+    />
+    <BottomNavigationAction
+      label="Favorites"
+      value="favorites"
+      icon={<FavoriteIcon />}
+      sx={{ flex: 1, minWidth: 0 }}
+    />
+    <BottomNavigationAction
+      label="Nearby"
+      value="nearby"
+      icon={<LocationOnIcon />}
+      sx={{ flex: 1, minWidth: 0 }}
+    />
+    <BottomNavigationAction
+      label="Chat"
+      value="chat"
+      icon={<ChatIcon />}
+      sx={{ flex: 1, minWidth: 0 }}
+    />
+    <BottomNavigationAction
+      label="Home"
+      value="home"
+      icon={<ChatIcon />}
+      sx={{ flex: 1, minWidth: 0 }}
+    />
+    <BottomNavigationAction
+      label="Folder"
+      value="folder"
+      icon={<FolderIcon />}
+      sx={{ flex: 1, minWidth: 0 }}
+    />
+  </BottomNavigation>
+</div> */}
+
+    {/* <div className="md:hidden fixed bottom-0 w-full bg-red-200">
+  <BottomNavigation
+    value={value}
+    onChange={handleChange}
+    sx={{
+      display: "flex",
+    }}
+  >
+    <BottomNavigationAction
+      label="Recents"
+      value="recents"
+      icon={<RestoreIcon />}
+      sx={{
+        flex: 1,
+        minWidth: 0,
+        "& .MuiBottomNavigationAction-label": {
+          fontSize: "0.65rem", // smaller font size
+        },
+      }}
+    />
+    <BottomNavigationAction
+      label="Favorites"
+      value="favorites"
+      icon={<FavoriteIcon />}
+      sx={{
+        flex: 1,
+        minWidth: 0,
+        "& .MuiBottomNavigationAction-label": {
+          fontSize: "0.65rem",
+        },
+      }}
+    />
+    <BottomNavigationAction
+      label="Nearby"
+      value="nearby"
+      icon={<LocationOnIcon />}
+      sx={{
+        flex: 1,
+        minWidth: 0,
+        "& .MuiBottomNavigationAction-label": {
+          fontSize: "0.65rem",
+        },
+      }}
+    />
+    <BottomNavigationAction
+      label="Chat"
+      value="chat"
+      icon={<ChatIcon />}
+      sx={{
+        flex: 1,
+        minWidth: 0,
+        "& .MuiBottomNavigationAction-label": {
+          fontSize: "0.65rem",
+        },
+      }}
+    />
+    <BottomNavigationAction
+      label="Home"
+      value="home"
+      icon={<ChatIcon />}
+      sx={{
+        flex: 1,
+        minWidth: 0,
+        "& .MuiBottomNavigationAction-label": {
+          fontSize: "0.65rem",
+        },
+      }}
+    />
+    <BottomNavigationAction
+      label="Folder"
+      value="folder"
+      icon={<FolderIcon />}
+      sx={{
+        flex: 1,
+        minWidth: 0,
+        "& .MuiBottomNavigationAction-label": {
+          fontSize: "0.65rem",
+        },
+      }}
+    />
+  </BottomNavigation>
+</div> */}
+
+    <div className="md:hidden fixed bottom-0 w-full">
+      <BottomNavigation
+        value={value}
+        onChange={handleChange}
+        sx={{
+          display: "flex",
+          minHeight: 50, // compact height
+          bgcolor: "white",
+        }}
+      >
+        <BottomNavigationAction
+          label="Home"
+          value="Home"
+          onClick={() => { setsideOptions({ Home: true, Search: false, Explore: false, Projects: false, Message: false, Notification: false, Create: false, Profile: false, More: false }), setpannel("Home") }}
+          icon={<HomeIcon />}
+          sx={{
+            flex: 1,
+            minWidth: 0,
+            color: "#6a1b9a", // default = dark purple
+            "&.Mui-selected": {
+              color: "purple", // active = lighter purple
+            },
+            "& .MuiBottomNavigationAction-label": {
+              fontSize: "0.65rem",
+            },
+          }}
+        />
+        <BottomNavigationAction
+          label="Explore"
+          value="Explore"
+          onClick={() => { setsideOptions({ Home: false, Search: false, Explore: true, Projects: false, Message: false, Notification: false, Create: false, Profile: false, More: false }), setpannel("Explore") }}
+          icon={<ExploreRoundedIcon />}
+          sx={{
+            flex: 1,
+            minWidth: 0,
+            color: "#6a1b9a",
+            "&.Mui-selected": {
+              color: "purple",
+            },
+            "& .MuiBottomNavigationAction-label": {
+              fontSize: "0.65rem",
+            },
+          }}
+        />
+        <BottomNavigationAction
+          label="Projects"
+          value="Projects"
+          onClick={() => { setsideOptions({ Home: false, Search: false, Explore: false, Projects: true, Message: false, Notification: false, Create: false, Profile: false, More: false }), setpannel("Projects") }}
+          icon={<TipsAndUpdatesTwoToneIcon />}
+          sx={{
+            flex: 1,
+            minWidth: 0,
+            color: "#6a1b9a",
+            "&.Mui-selected": {
+              color: "purple",
+            },
+            "& .MuiBottomNavigationAction-label": {
+              fontSize: "0.65rem",
+            },
+          }}
+        />
+        <BottomNavigationAction
+          label="Create"
+          value="Create"
+          onClick={() => { setsideOptions({ Home: false, Search: false, Explore: false, Projects: false, Message: false, Notification: false, Create: true, Profile: false, More: false }), setpannel("Create") }}
+          icon={<AddToPhotosRoundedIcon />}
+          sx={{
+            flex: 1,
+            minWidth: 0,
+            color: "#6a1b9a",
+            "&.Mui-selected": {
+              color: "purple",
+            },
+            "& .MuiBottomNavigationAction-label": {
+              fontSize: "0.65rem",
+            },
+          }}
+        />
+        <BottomNavigationAction
+          label="Message"
+          value="Message"
+          onClick={() => { setsideOptions({ Home: false, Search: false, Explore: false, Projects: false, Message: true, Notification: false, Create: false, Profile: false, More: false }), setpannel("Message") }}
+          icon={<ChatRoundedIcon />}
+          sx={{
+            flex: 1,
+            minWidth: 0,
+            color: "#6a1b9a",
+            "&.Mui-selected": {
+              color: "purple",
+            },
+            "& .MuiBottomNavigationAction-label": {
+              fontSize: "0.65rem",
+            },
+          }}
+        />
+        <BottomNavigationAction
+          label="Profile"
+          value="Profile"
+          onClick={() => { setsideOptions({ Home: false, Search: false, Explore: false, Projects: false, Message: false, Notification: false, Create: false, Profile: true, More: false }), setpannel("Profile") }}
+          icon={<PersonIcon />}
+          sx={{
+            flex: 1,
+            minWidth: 0,
+            color: "#6a1b9a",
+            "&.Mui-selected": {
+              color: "purple",
+            },
+            "& .MuiBottomNavigationAction-label": {
+              fontSize: "0.65rem",
+            },
+          }}
+        />
+      </BottomNavigation>
     </div>
+
+
+
+
   </>)
 }
 
