@@ -15,6 +15,7 @@ import User from '@/models/User'
 import LaunchTwoToneIcon from '@mui/icons-material/LaunchTwoTone';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ListRoundedIcon from '@mui/icons-material/ListRounded';
+import { PostAdd } from '@mui/icons-material'
 
 const Profile = ({ Username }) => {
   console.log(Username)
@@ -34,6 +35,7 @@ const Profile = ({ Username }) => {
   const [showCropper, setShowCropper] = useState(false);
 
   const [loading, setLoading] = useState(false);
+  const [Saveloading, setSaveloading] = useState(false)
   const [imageUrl, setImageUrl] = useState(null);
 
 
@@ -100,6 +102,8 @@ const Profile = ({ Username }) => {
       return
     }
 
+    setSaveloading(true)
+
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -128,14 +132,21 @@ const Profile = ({ Username }) => {
       setpicture(USER.profilepic)
       // setlinks(USER.links)
       setProfileForm({ ...ProfileForm, bio: USER.bio })
+      
+      setSaveloading(false)
+      setedit(false)
+      return
     }
     else {
 
       toast.error(result.message)
+      setSaveloading(false)
+      setedit(true)
       return
 
 
     }
+
 
 
   }
@@ -257,16 +268,23 @@ const Profile = ({ Username }) => {
   }
   else {
 
+     const posts = Array.from({ length: 50 });
+     const followers = Array.from({ length: 371 });
+     const followings = Array.from({ length: 72 });
+     const [section, setsection] = useState("posts")
+
     return (<>
       <div className='md:hidden h-10 fixed top-0 w-full  flex justify-between px-5 items-center z-10 bg-white'>
-        <div><SettingsOutlinedIcon/></div>
+        <div><SettingsOutlinedIcon /></div>
         <div className='font-semibold'>{USER.name}</div>
-        <div><ListRoundedIcon/></div>
+        <div><ListRoundedIcon /></div>
       </div>
-      <div className="fixed top-10 w-full saperator h-[1px] bg-gray-300  md:hidden z-10"></div>
+
+      <div className="saperator fixed top-10 w-full  h-[1px] bg-gray-300  md:hidden z-10"></div>
+
       <div className=' flex justify-center gap-2 flex-col lg:flex-row  p-4 my-5 md:my-0 md:pt-4  '>
 
-        
+
 
 
 
@@ -379,7 +397,7 @@ const Profile = ({ Username }) => {
                 id='bio'
                 value={ProfileForm.bio ?? ""}
                 onChange={handleChange}
-                placeholder={USER.bio ? `${USER.bio}` :" Tell us about yourself"}
+                placeholder={USER.bio ? `${USER.bio}` : " Tell us about yourself"}
                 className="w-full p-2 border rounded-lg "
               />
             </div>
@@ -447,12 +465,12 @@ const Profile = ({ Username }) => {
 
 
           <button className='bg-white border p-2 my-2 rounded-lg w-full  md:w-full' onClick={() => {
-            setedit(!edit)
+            setedit(true)
             if (edit) {
 
               UpdateProfile()
             }
-          }}>{!edit ? "Edit Profile" : "Save"}</button>
+          }}>{Saveloading ?"Loading..." : `${!edit ? "Edit Profile" : "Save"}`}</button>
         </aside>
 
 
@@ -541,7 +559,77 @@ const Profile = ({ Username }) => {
           </div>
           <Paymentpage />
         </main>
+
       </div>
+      <section className='section   mx-auto  h-[100vh] w-full   p-0 sm:gap-5 flex-wrap  mb-5 '>
+        <div className='postNav w-full bg-white text-center font-semibold flex justify-around items-center border-t-[1px] border-b-[1px] border-gray-400 h-fit   '>
+          <div onClick={()=>{setsection("posts")}} className={`  ${section=="posts"?"w-1/3 h-fit py-2 bg-purple-100":"w-1/3 h-fit py-2"}`}> <span>{posts.length}</span><p>Post</p> </div>
+          <div onClick={()=>{setsection("followers")}} className={`  ${section=="followers"?"w-1/3 h-fit py-2 bg-purple-100":"w-1/3 h-fit py-2"}`}> <span>{followers.length}</span><p>Followers</p></div>
+          <div onClick={()=>{setsection("followings")}} className={`  ${section=="followings"?"w-1/3 h-fit py-2 bg-purple-100":"w-1/3 h-fit py-2"}`}> <span>{followings.length}</span><p>Following</p></div>
+        </div>
+
+
+        <div className="px-0 w-full h-full sm:px-4 md:px-6 py-0 overflow-y-scroll no-scrollbar">
+
+
+
+         {section == "posts" && <div className="grid grid-cols-3 gap-[1px] sm:gap-4 md:gap-6 sm:my-5   ">
+            {posts.map((_, i) => (
+              <div
+                key={i}
+                className="aspect-square bg-gray-200 sm:rounded-xl shadow-sm overflow-hidden 
+                       hover:scale-[1.02] transition-transform cursor-pointer"
+              >
+                {/* Replace with your post image */}
+                <img
+                  src={`https://picsum.photos/400?random=${i}`}
+                  alt={`Post ${i}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </div>}
+
+
+         {section == "followers" && <div className=" md:w-1/2  mt-2 mx-2  sm:mx-auto   ">
+            {posts.map((_, i) => (
+              <div key={i} className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl border-[1px] border-transparent hover:border-black justify-between '>
+                <div className='flex items-center justify-start gap-2 cursor-pointer' >
+                  {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
+
+                  <div>
+                    <p className='font-bold'>{USER.username}</p>
+                    <p>{USER.name}</p>
+                  </div>
+                </div>
+
+                <button type='button' className='hover:text-purple-500 cursor-pointer'>Remove</button>
+              </div>
+            ))}
+          </div>}
+
+         {section == "followings" && <div className=" md:w-1/2 mt-2 mx-2  sm:mx-auto   ">
+            {posts.map((_, i) => (
+              <div key={i} className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl border-[1px] border-transparent hover:border-black justify-between '>
+                <div className='flex items-center justify-start gap-2 cursor-pointer' >
+                  {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
+
+                  <div>
+                    <p className='font-bold'>{USER.username}</p>
+                    <p>{USER.name}</p>
+                  </div>
+                </div>
+
+                <button type='button' className='hover:text-purple-500 cursor-pointer'>Unfollow</button>
+              </div>
+            ))}
+          </div>}
+
+
+
+        </div>
+
+      </section>
     </>)
   }
 }

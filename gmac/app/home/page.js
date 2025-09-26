@@ -83,6 +83,9 @@ const Home = () => {
   };
   console.log(session.user.image)
 
+  const posts = Array.from({ length: 50 });
+  const suggestedUsers = Array.from({ length: 50 });
+
   return (<>
 
 
@@ -255,206 +258,50 @@ const Home = () => {
               </div>
             </div>
 
-          {!USER.password && <div className='fixed md:hidden h-15 bg-purple-50 top-15 w-full text-black flex items-center justify-start px-5 border-b-[1px] border-gray-400 z-10 cursor-default'>
+            {!USER.password && <div className='fixed md:hidden h-15 bg-purple-50 top-15 w-full text-black flex items-center justify-start px-5 border-b-[1px] border-gray-400 z-10 cursor-default'>
               <span className='text-red-500'>*</span>Please set a password to secure your account. <div onClick={() => { setsideOptions({ Home: false, Search: false, Explore: false, Projects: false, Message: false, Notification: false, Create: false, Profile: true, More: false }), setpannel("Profile") }} className='underline cursor-pointer'>Set Password</div>
             </div>}
 
 
             <div className="posts sm:px-5 h-fit mb-15 md:mb-0">
 
-              <div className="post   h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
-                <div className='h-13 px-2 flex items-center justify-between border-b-[1px] border-gray-200'>
-                  <div className='flex  gap-2 items-center'>
-                    {session.user.image ? <img className='h-7 md:h-10 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-10 w-10  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
-                    <p className='text-sm font-semibold md:text-xl'>{USER.username}<span className='text-purple-500 text-sm md:text-lg'> .2D</span> </p>
-                  </div>
-                  <div className='text-3xl'>
-                    <MoreHorizIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
-                  </div>
+              {posts.map((_, i) => (<div key={i}>
 
-                </div>
-                <img className='h-fit w-full' src={`https://static01.nyt.com/images/2018/03/08/business/08STATE-tear/07STATE-tear-articleLarge.jpg?quality=75&auto=webp&disable=upscale`} alt="" />
-                <div className='h-fit px-1 flex items-center justify-between '>
-                  <div className='flex gap-2'>
-                    <button className='text-3xl' type='button'><FavoriteTwoToneIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                    <button className='text-3xl' type='button'><AssistantRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                    <button className='text-3xl' type='button'><SendRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                  </div>
-                  <div>
-                    <button className='text-3xl' type='button'><BookmarkBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                  </div>
-                </div>
-                <div className='h-fit px-1 '>
-                  <p className='font-semibold'>{USER.username}</p>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore alias repudiandae deserunt delectus cum et eveniet vel, ea eum maiores ullam quidem nisi temporibus aliquam in molestias quo sint veritatis.</p>
-                  <p>Comments</p>
-                </div>
+                <div className="post   h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
+                  <div className='h-13 px-2 flex items-center justify-between border-b-[1px] border-gray-200'>
+                    <div className='flex  gap-2 items-center'>
+                      {session.user.image ? <img className='h-7 md:h-10 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-10 w-10  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
+                      <p className='text-sm font-semibold '>{USER.username}<span className='text-gray-500 font-normal text-sm '> . 2d</span> </p>
+                    </div>
+                    <div className='text-3xl'>
+                      <MoreHorizIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
+                    </div>
 
-              </div>
-
-              <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
-              
-              <div className="post   h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
-                <div className='h-13 px-2 flex items-center justify-between border-b-[1px] border-gray-200'>
-                  <div className='flex  gap-2 items-center'>
-                    {session.user.image ? <img className='h-7 md:h-10 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-10 w-10  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
-                    <p className='text-sm font-semibold md:text-xl'>{USER.username}<span className='text-purple-500 text-sm md:text-lg'> .2D</span> </p>
                   </div>
-                  <div className='text-3xl'>
-                    <MoreHorizIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
+                  <img className='h-fit w-full' src={`https://picsum.photos/400?random=${i}`}
+                    alt={`Post ${i}`} />
+                  <div className='h-fit px-1 flex items-center justify-between '>
+                    <div className='flex gap-2'>
+                      <button className='text-3xl' type='button'><FavoriteTwoToneIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                      <button className='text-3xl' type='button'><AssistantRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                      <button className='text-3xl' type='button'><SendRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    </div>
+                    <div>
+                      <button className='text-3xl' type='button'><BookmarkBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
+                    </div>
+                  </div>
+                  <div className='h-fit px-1 '>
+                    <p className='font-semibold'>{USER.username}</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore alias repudiandae deserunt delectus cum et eveniet vel, ea eum maiores ullam quidem nisi temporibus aliquam in molestias quo sint veritatis.</p>
+                    <p>Comments</p>
                   </div>
 
                 </div>
-                <img className='h-fit w-full' src={`https://media.licdn.com/dms/image/v2/D4D12AQGVw0sVZ7Kj-g/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1673636348357?e=2147483647&v=beta&t=PSpU4mZFpMBmE14oWDnDwf5a8_4rdQUiCUKF_U-x584`} alt="" />
-                <div className='h-fit px-1 flex items-center justify-between '>
-                  <div className='flex gap-2'>
-                    <button className='text-3xl' type='button'><FavoriteTwoToneIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                    <button className='text-3xl' type='button'><AssistantRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                    <button className='text-3xl' type='button'><SendRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                  </div>
-                  <div>
-                    <button className='text-3xl' type='button'><BookmarkBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                  </div>
-                </div>
-                <div className='h-fit px-1 '>
-                  <p className='font-semibold'>{USER.username}</p>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore alias repudiandae deserunt delectus cum et eveniet vel, ea eum maiores ullam quidem nisi temporibus aliquam in molestias quo sint veritatis.</p>
-                  <p>Comments</p>
-                </div>
 
-              </div>
-
-              <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
-
-              <div className="post   h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
-                <div className='h-13 px-2 flex items-center justify-between border-b-[1px] border-gray-200'>
-                  <div className='flex  gap-2 items-center'>
-                    {session.user.image ? <img className='h-7 md:h-10 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-10 w-10  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
-                    <p className='text-sm font-semibold md:text-xl'>{USER.username}<span className='text-purple-500 text-sm md:text-lg'> .2D</span> </p>
-                  </div>
-                  <div className='text-3xl'>
-                    <MoreHorizIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
-                  </div>
-
-                </div>
-                <img className='h-fit w-full' src={`https://www.seoclerk.com/pics/001/142/576/a94e357058c0eee661a72e38111b87d8.jpg`} alt="" />
-                <div className='h-fit px-1 flex items-center justify-between '>
-                  <div className='flex gap-2'>
-                    <button className='text-3xl' type='button'><FavoriteTwoToneIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                    <button className='text-3xl' type='button'><AssistantRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                    <button className='text-3xl' type='button'><SendRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                  </div>
-                  <div>
-                    <button className='text-3xl' type='button'><BookmarkBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                  </div>
-                </div>
-                <div className='h-fit px-1 '>
-                  <p className='font-semibold'>{USER.username}</p>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore alias repudiandae deserunt delectus cum et eveniet vel, ea eum maiores ullam quidem nisi temporibus aliquam in molestias quo sint veritatis.</p>
-                  <p>Comments</p>
-                </div>
-
-              </div>
-
-              <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
-
-              <div className="post   h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
-                <div className='h-13 px-2 flex items-center justify-between border-b-[1px] border-gray-200'>
-                  <div className='flex  gap-2 items-center'>
-                    {session.user.image ? <img className='h-7 md:h-10 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-10 w-10  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
-                    <p className='text-sm font-semibold md:text-xl'>{USER.username}<span className='text-purple-500 text-sm md:text-lg'> .2D</span> </p>
-                  </div>
-                  <div className='text-3xl'>
-                    <MoreHorizIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
-                  </div>
-
-                </div>
-                <img className='h-fit w-full' src={`https://mp.moonpreneur.com/blog/wp-content/uploads/2024/11/the-value-of-computerscience-education.webp`} alt="" />
-                <div className='h-fit px-1 flex items-center justify-between '>
-                  <div className='flex gap-2'>
-                    <button className='text-3xl' type='button'><FavoriteTwoToneIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                    <button className='text-3xl' type='button'><AssistantRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                    <button className='text-3xl' type='button'><SendRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                  </div>
-                  <div>
-                    <button className='text-3xl' type='button'><BookmarkBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                  </div>
-                </div>
-                <div className='h-fit px-1 '>
-                  <p className='font-semibold'>{USER.username}</p>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore alias repudiandae deserunt delectus cum et eveniet vel, ea eum maiores ullam quidem nisi temporibus aliquam in molestias quo sint veritatis.</p>
-                  <p>Comments</p>
-                </div>
-
-              </div>
-
-              <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
-
-              <div className="post   h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
-                <div className='h-13 px-2 flex items-center justify-between border-b-[1px] border-gray-200'>
-                  <div className='flex  gap-2 items-center'>
-                    {session.user.image ? <img className='h-7 md:h-10 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-10 w-10  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
-                    <p className='text-sm font-semibold md:text-xl'>{USER.username}<span className='text-purple-500 text-sm md:text-lg'> .2D</span> </p>
-                  </div>
-                  <div className='text-3xl'>
-                    <MoreHorizIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
-                  </div>
-
-                </div>
-                <img className='h-fit w-full' src={`https://ninadinh.wordpress.com/wp-content/uploads/2016/11/umd_cs_infographic_2015-page-001.jpg?w=656`} alt="" />
-                <div className='h-fit px-1 flex items-center justify-between '>
-                  <div className='flex gap-2'>
-                    <button className='text-3xl' type='button'><FavoriteTwoToneIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                    <button className='text-3xl' type='button'><AssistantRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                    <button className='text-3xl' type='button'><SendRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                  </div>
-                  <div>
-                    <button className='text-3xl' type='button'><BookmarkBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                  </div>
-                </div>
-                <div className='h-fit px-1 '>
-                  <p className='font-semibold'>{USER.username}</p>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore alias repudiandae deserunt delectus cum et eveniet vel, ea eum maiores ullam quidem nisi temporibus aliquam in molestias quo sint veritatis.</p>
-                  <p>Comments</p>
-                </div>
-
-              </div>
-
-              <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
-
-              <div className="post   h-fit w-full sm:w-2/3 sm:mx-auto my-2 ">
-                <div className='h-13 px-2 flex items-center justify-between border-b-[1px] border-gray-200 '>
-                  <div className='flex  gap-2 items-center '>
-                    {session.user.image ? <img className='h-7 md:h-10 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-10 w-10  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
-                    <p className='text-sm font-semibold md:text-xl'>{USER.username}<span className='text-purple-500 text-sm md:text-lg'> .2D</span> </p>
-                  </div>
-                  <div className='text-3xl'>
-                    <MoreHorizIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' />
-                  </div>
-
-                </div>
-                <img className='h-fit w-full' src={`https://pbs.twimg.com/amplify_video_thumb/1953440008309768193/img/jfORB9CCqgHRtKLI.jpg:large`} alt="" />
-                <div className='h-fit px-1 flex items-center justify-between '>
-                  <div className='flex gap-2'>
-                    <button className='text-3xl' type='button'><FavoriteTwoToneIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                    <button className='text-3xl' type='button'><AssistantRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                    <button className='text-3xl' type='button'><SendRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                  </div>
-                  <div>
-                    <button className='text-3xl' type='button'><BookmarkBorderRoundedIcon sx={{ color: "#6a1b9a" }} fontSize='inherit' /></button>
-                  </div>
-                </div>
-                <div className='h-fit px-1 '>
-                  <p className='font-semibold'>{USER.username}</p>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore alias repudiandae deserunt delectus cum et eveniet vel, ea eum maiores ullam quidem nisi temporibus aliquam in molestias quo sint veritatis.</p>
-                  <p>Comments</p>
-                </div>
-
-              </div>
-
-              <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
+                <div className='saperator bg-gray-200 w-full sm:w-2/3 sm:mx-auto h-[1px]'></div>
 
 
+              </div>))}
 
 
 
@@ -474,100 +321,42 @@ const Home = () => {
 
 
             <div className='px-5 mt-2 flex items-center justify-between '>
-              <div className='flex items-center justify-start gap-2'>
+              <div className='flex items-center justify-start gap-2 cursor-pointer' onClick={() => { setsideOptions({ Home: false, Search: false, Explore: false, Projects: false, Message: false, Notification: false, Create: false, Profile: true, More: false }), setpannel("Profile") }}>
                 {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
                 <div>
-                  <p className='font-bold'>shxm</p>
-                  <p>Saksham Kushwaha</p>
+                  <p className='font-bold'>{USER.username}</p>
+                  <p>{USER.name}</p>
                 </div>
               </div>
-              <button type='button'>Switch</button>
+              <button type='button' className='hover:text-purple-500 cursor-pointer'>Switch</button>
             </div>
 
 
 
             <div className='px-5 my-5 flex items-center justify-between'>
-              <h4 className=' font-bold'>Suggested for you</h4>
-              <button type='button'>See all</button>
+              <h4 className=' font-bold cursor-default'>Suggested for you</h4>
+              <button type='button' className='hover:text-purple-500 cursor-pointer'>See all</button>
             </div>
 
 
 
 
-            <div className='px-3 mt-2'>
+            <div className='px-3 mt-2 h-[80vh] overflow-y-scroll'>
 
-              <div className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl justify-between '>
-                <div className='flex items-center justify-start gap-2'>
+              {suggestedUsers.map((_, i) => (<div key={i} className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl border-[1px] border-transparent hover:border-black justify-between '>
+                <div className='flex items-center justify-start gap-2 cursor-pointer' >
                   {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
 
                   <div>
-                    <p className='font-bold'>shxm</p>
-                    <p>Saksham Kushwaha</p>
+                    <p className='font-bold'>{USER.username}</p>
+                    <p>{USER.name}</p>
                   </div>
                 </div>
 
-                <button type='button'>Follow</button>
+                <button type='button' className='hover:text-purple-500 cursor-pointer'>Follow</button>
               </div>
+              ))}
 
-              <div className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl justify-between '>
-                <div className='flex items-center justify-start gap-2'>
-                  {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
-                  <div>
-                    <p className='font-bold'>shxm</p>
-                    <p>Saksham Kushwaha</p>
-                  </div>
-                </div>
-
-                <button type='button'>Follow</button>
-              </div>
-
-              <div className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl justify-between '>
-                <div className='flex items-center justify-start gap-2'>
-                  {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
-                  <div>
-                    <p className='font-bold'>shxm</p>
-                    <p>Saksham Kushwaha</p>
-                  </div>
-                </div>
-
-                <button type='button'>Follow</button>
-              </div>
-
-              <div className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl justify-between '>
-                <div className='flex items-center justify-start gap-2'>
-                  {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
-                  <div>
-                    <p className='font-bold'>shxm</p>
-                    <p>Saksham Kushwaha</p>
-                  </div>
-                </div>
-
-                <button type='button'>Follow</button>
-              </div>
-
-              <div className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl justify-between '>
-                <div className='flex items-center justify-start gap-2'>
-                  {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
-                  <div>
-                    <p className='font-bold'>shxm</p>
-                    <p>Saksham Kushwaha</p>
-                  </div>
-                </div>
-
-                <button type='button'>Follow</button>
-              </div>
-
-              <div className=' mt-2 p-2 px-4 rounded-lg flex items-center hover:shadow-xl justify-between '>
-                <div className='flex items-center justify-start gap-2'>
-                  {session.user.image ? <img className='h-13 rounded-full' src={`${session.user.image}`} alt="" /> : <div className='h-13 w-13  bg-slate-600 flex items-center justify-center rounded-full text-2xl'>{session.user.name.split("")[0].toUpperCase()}</div>}
-                  <div>
-                    <p className='font-bold'>shxm</p>
-                    <p>Saksham Kushwaha</p>
-                  </div>
-                </div>
-
-                <button type='button'>Follow</button>
-              </div>
 
 
 
